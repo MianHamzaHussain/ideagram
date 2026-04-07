@@ -1,0 +1,52 @@
+import type { ButtonHTMLAttributes } from 'react';
+
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: 'primary' | 'secondary' | 'outline' | 'navy' | 'brand-outline' | 'destructive';
+  rounded?: 'xl' | 'full';
+  isLoading?: boolean;
+}
+
+const Button = ({ 
+  children, 
+  variant = 'primary', 
+  rounded = 'xl',
+  isLoading = false,
+  className = '', 
+  ...props 
+}: ButtonProps) => {
+  const baseStyles = `w-full px-6 py-[14px] cursor-pointer transition-all duration-200 ripple flex items-center justify-center gap-2 font-inter text-base font-bold select-none h-[48px] focus:outline-none 
+    ${rounded === 'full' ? 'rounded-button' : 'rounded-xl'}`;
+  
+  const variantStyles = {
+    primary: 'bg-brand-blue text-white hover:bg-primary-400 active:bg-primary-500 active:scale-95 border-none',
+    secondary: 'bg-neutral-50 text-neutral-900 hover:bg-neutral-100 active:bg-neutral-200 active:scale-95 border-none',
+    outline: 'border border-primary-300 text-primary-300 hover:bg-primary-50 active:scale-95',
+    navy: 'bg-[#004777] text-white hover:bg-[#00365a] active:bg-[#00253d] active:scale-95 border-none',
+    'brand-outline': '!h-[40px] border border-border-brand text-border-brand bg-transparent hover:bg-primary-50 rounded-md py-2 px-4 shadow-sm font-inter text-sm font-semibold',
+    destructive: 'bg-destructive text-white hover:opacity-90 active:scale-95 border-none',
+  };
+
+  const disabledStyles = 'opacity-50 grayscale cursor-not-allowed transform-none';
+  
+  const combinedClassName = `${baseStyles} ${variantStyles[variant]} ${props.disabled || isLoading ? disabledStyles : ''} ${className}`;
+
+  return (
+    <button
+      className={combinedClassName}
+      disabled={props.disabled || isLoading}
+      {...props}
+    >
+      {isLoading ? (
+        <div className="flex items-center gap-2">
+          <svg className="animate-spin h-5 w-5 text-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <span>Loading...</span>
+        </div>
+      ) : children}
+    </button>
+  );
+};
+
+export default Button;

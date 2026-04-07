@@ -1,0 +1,199 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary-50: #E6F0FF;
+  --color-primary-75: #96C0FF;
+  --color-primary-100: #6BA8FF;
+  --color-primary-200: #2B7FFF;
+  --color-primary-300: #0065FF;
+  --color-primary-400: #0047AF;
+  --color-primary-500: #00349C;
+  --color-brand-blue: #0065FF;
+  --color-brand-red: #FF383C;
+  --color-destructive: #FF383C;
+  --color-brand-success: #36B37E;
+  --color-brand-green: #4CAF50;
+  --color-brand-orange: #FF9800;
+  --color-brand-shutter: #FF7171;
+  --color-overlay-secondary: #78788029;
+  --color-canvas-bg: #000000;
+
+  --color-neutral-50: #DFE1E6;
+  --color-neutral-100: #C1C7D0;
+  --color-neutral-200: #B3BAC5;
+  --color-neutral-300: #97A0AF;
+  --color-neutral-400: #7A869A;
+  --color-neutral-500: #5E6C84;
+  --color-neutral-600: #42526E;
+  --color-neutral-700: #253858;
+  --color-neutral-800: #172B4D;
+  --color-neutral-900: #091E42;
+
+  --font-geist: "Geist", sans-serif;
+  --font-jakarta: "Plus Jakarta Sans", sans-serif;
+  --font-inter: "Inter", sans-serif;
+  --font-noto: "Noto Sans JP", sans-serif;
+  --font-sf-pro: "SF Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 12px;
+  --radius-button: 30px;
+  --radius-modal: 20px;
+  
+  --color-splash-bg: #0265DC;
+  --spacing-xs: 8px;
+  --spacing-md: 16px;
+  --color-border-brand: #0265DC;
+  --color-text-save: #66696D;
+  --color-text-secondary: #66696D;
+  --color-input-border: #D5D5D5;
+  --color-input-placeholder: #414346;
+  --color-text-subtle: #414346;
+  --color-label-text: #172B4D;
+  --spacing-xxxs: 2px;
+  --spacing-xxs: 4px;
+  --spacing-xs: 8px;
+  --spacing-s: 12px;
+  --spacing-m: 16px;
+  --spacing-heading-s: 16px;
+  --font-family-heading-s: "Inter", sans-serif;
+  --font-weight-heading-s: 700;
+  --line-height-heading-s: 1.2;
+
+  --color-bg-brand-subtlest: #E0F2FF;
+  --font-family-body-m: "Inter", sans-serif;
+  --font-weight-body-m: 400;
+  --font-size-body-m: 16px;
+  --line-height-body-m: 1.4;
+
+  --font-size-heading-m: 18px;
+  --font-weight-heading-m: 700;
+  --line-height-heading-m: 1.2;
+
+  --font-size-body-s: 14px;
+  --font-weight-body-s: 400;
+  --line-height-body-s: 1.4;
+
+  --color-post-bg: #FDFDFD;
+  --color-tag-bg-progress: #FFECCC;
+  --color-text-accent-orange: #B14C00;
+
+  --font-size-label-xs: 12px;
+  --font-weight-label-strong: 600;
+  --line-height-label-xs: 16px;
+}
+
+@layer base {
+  html, body, #root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #F2F4F7;
+  }
+  body {
+    @apply font-geist text-[#091E42] antialiased;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer components {
+  .headline-30 {
+    @apply font-jakarta font-bold text-[24px] leading-[1.2] tracking-[0.15px];
+  }
+
+  .heading-m {
+    font-family: var(--font-family-heading-s);
+    font-weight: var(--font-weight-heading-m);
+    font-size: var(--font-size-heading-m);
+    line-height: var(--line-height-heading-m);
+    letter-spacing: 0px;
+    color: var(--color-text-primary);
+  }
+
+  .heading-s {
+    font-family: var(--font-family-heading-s);
+    font-weight: var(--font-weight-heading-s);
+    font-size: var(--spacing-heading-s);
+    line-height: var(--line-height-heading-s);
+    letter-spacing: 0px;
+    text-align: center;
+  }
+
+  .body-m {
+    font-family: var(--font-family-body-m);
+    font-weight: var(--font-weight-body-m);
+    font-size: var(--font-size-body-m);
+    line-height: var(--line-height-body-m);
+    letter-spacing: 0px;
+    vertical-align: middle;
+  }
+
+  .body-s {
+    font-family: var(--font-family-body-m);
+    font-weight: var(--font-weight-body-s);
+    font-size: var(--font-size-body-s);
+    line-height: var(--line-height-body-s);
+    letter-spacing: 0px;
+  }
+
+  .body-xs {
+    font-family: var(--font-family-body-m);
+    font-weight: 400;
+    font-size: var(--font-size-body-xs);
+    line-height: var(--line-height-body-xs);
+    letter-spacing: 0%;
+  }
+
+  .label-xs {
+    font-family: var(--font-family-body-m);
+    font-weight: var(--font-weight-label-strong);
+    font-size: var(--font-size-label-xs);
+    line-height: var(--line-height-label-xs);
+    letter-spacing: 0%;
+  }
+
+  .label-m {
+    @apply font-inter font-semibold text-[16px] leading-[24px] text-label-text;
+  }
+
+  .input-field {
+    @apply w-full h-[40px] px-2 py-2 border border-input-border rounded-[8px] text-[16px] font-inter bg-white text-label-text outline-none transition-all placeholder:text-input-placeholder placeholder:font-normal placeholder:text-[16px] placeholder:leading-[24px];
+  }
+
+  .link-m {
+    @apply font-inter font-semibold text-[16px] leading-[24px] text-label-text;
+    color: var(--color-border-brand);
+  }
+
+  /* Custom PWA Animations */
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes scale-in {
+    from { opacity: 0; transform: scale(0.95) translateY(10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  @keyframes slide-up {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.3s ease-out forwards;
+  }
+
+  .animate-scale-in {
+    animation: scale-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+}

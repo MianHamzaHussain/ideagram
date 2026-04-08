@@ -1,4 +1,4 @@
-import { Formik, Form } from 'formik';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
 import TextField from '../../components/TextField/TextField';
 import BottomSheet from '../../components/BottomSheet/BottomSheet';

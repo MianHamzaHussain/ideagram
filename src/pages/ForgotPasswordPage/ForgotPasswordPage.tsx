@@ -18,7 +18,7 @@ const ForgotPasswordPage = () => {
   const forgotPasswordMutation = useMutation({
     mutationFn: authApi.forgotPassword,
     onSuccess: (data) => {
-      toast.success(data?.detail || 'Email sent follow instructions to set new password!');
+      toast.success(data?.detail || 'Password reset e-mail has been sent!');
     },
     onError: (error: Error) => {
       const msg = getErrorMessage(error, 'Failed to change password');

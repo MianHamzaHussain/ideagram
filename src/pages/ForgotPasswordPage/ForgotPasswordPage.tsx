@@ -2,6 +2,10 @@ import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import { TextField, Button, AnimatedPage } from '@/components';
+import { useMutation } from '@tanstack/react-query';
+import { authApi } from '@/api';
+import { toast } from 'react-toastify';
+import { getErrorMessage } from '@/utils';
 const ForgotPasswordSchema = Yup.object().shape({
   email: Yup.string()
     .email('Invalid email')
@@ -11,6 +15,16 @@ const ForgotPasswordSchema = Yup.object().shape({
 
 const ForgotPasswordPage = () => {
   const navigate = useNavigate();
+  const forgotPasswordMutation = useMutation({
+    mutationFn: authApi.forgotPassword,
+    onSuccess: (data) => {
+      toast.success(data?.detail || 'Email sent follow instructions to set new password!');
+    },
+    onError: (error: Error) => {
+      const msg = getErrorMessage(error, 'Failed to change password');
+      toast.error(msg);
+    }
+  });
 
   return (
     <AnimatedPage animationType="fade">
@@ -28,25 +42,25 @@ const ForgotPasswordPage = () => {
           <Formik
             initialValues={{ email: '' }}
             validationSchema={ForgotPasswordSchema}
-            onSubmit={() => {
+            onSubmit={(values) => {
+              forgotPasswordMutation.mutate(values);
             }}
           >
-            {({ isSubmitting }) => (
-              <Form className="flex flex-col gap-6 w-full">
-                <TextField
-                  label="Email address"
-                  name="email"
-                  type="email"
-                  placeholder="Enter email address"
-                />
 
-                <div className="mt-4">
-                  <Button type="submit" variant="primary" isLoading={isSubmitting}>
-                    Send
-                  </Button>
-                </div>
-              </Form>
-            )}
+            <Form className="flex flex-col gap-6 w-full">
+              <TextField
+                label="Email address"
+                name="email"
+                type="email"
+                placeholder="Enter email address"
+              />
+
+              <div className="mt-4">
+                <Button type="submit" variant="primary" isLoading={forgotPasswordMutation.isPending}>
+                  Send
+                </Button>
+              </div>
+            </Form>
           </Formik>
 
           <div className="flex justify-center w-full mt-8">

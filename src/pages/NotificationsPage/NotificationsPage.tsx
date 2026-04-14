@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MessageSquare, FileText } from 'react-feather';
 import { useInfiniteNotifications } from '@/hooks';
-import { PageHeader, AnimatedPage } from '@/components';
+import { PageHeader, AnimatedPage, PageMeta } from '@/components';
 import type { Notification } from '@/api';
 
 const NotificationsPage = () => {
@@ -47,6 +47,7 @@ const NotificationsPage = () => {
 
   return (
     <AnimatedPage animationType="slide-up">
+      <PageMeta title="Notifications" description="View and manage your recent activity and mentions." />
       <div className="flex flex-col bg-[#414346]/20 h-full w-full max-w-[600px] h-[100dvh] mx-auto font-inter overflow-hidden">
         <div className="flex-1 bg-white rounded-t-[32px] flex flex-col overflow-hidden">
           <PageHeader 

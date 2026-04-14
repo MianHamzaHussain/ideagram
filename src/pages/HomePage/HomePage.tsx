@@ -6,7 +6,8 @@ import {
   ReportCard,
   InfiniteScrollSentinel,
   FiltersModal,
-  AnimatedPage
+  AnimatedPage,
+  PageMeta
 } from '@/components';
 import { useInfiniteReports } from '@/hooks';
 import { mapReportToCardProps } from '@/utils';
@@ -66,6 +67,7 @@ const HomePage = () => {
 
   return (
     <AnimatedPage animationType="fade">
+      <PageMeta title="Reports" description="View and manage project progress and trouble reports." />
       <div className="flex flex-col h-full bg-white overflow-hidden font-inter">
         <Header onFilterClick={() => setIsFilterModalOpen(true)} />
         <Tabs activeTab={reportType} onTabChange={setReportType} />

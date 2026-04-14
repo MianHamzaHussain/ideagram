@@ -30,7 +30,11 @@ export interface MediaItem {
 const CreatePostSchema = Yup.object().shape({
   reportType: Yup.number().min(1, 'Required').required('Required'),
   project: Yup.string().required('Required'),
-  tags: Yup.array().min(2, 'Select at least Status and Trend').required('Required'),
+  tags: Yup.array().when('reportType', {
+    is: 2,
+    then: (schema) => schema.min(2, 'Select at least Status and Trend').required('Required'),
+    otherwise: (schema) => schema.min(2, 'Select at least two tags').required('Required'),
+  }),
   title: Yup.string().required('Required'),
   description: Yup.string().required('Required'),
   date: Yup.string().required('Required'),

@@ -41,9 +41,8 @@
   --radius-xl: 12px;
   --radius-button: 30px;
   --radius-modal: 20px;
-  
+
   --color-splash-bg: #0265DC;
-  --spacing-xs: 8px;
   --spacing-md: 16px;
   --color-border-brand: #0265DC;
   --color-text-save: #66696D;
@@ -86,13 +85,17 @@
 }
 
 @layer base {
-  html, body, #root {
+
+  html,
+  body,
+  #root {
     height: 100%;
     margin: 0;
     padding: 0;
     overflow: hidden;
     background-color: #F2F4F7;
   }
+
   body {
     @apply font-geist text-[#091E42] antialiased;
     -webkit-font-smoothing: antialiased;
@@ -171,18 +174,35 @@
 
   /* Custom PWA Animations */
   @keyframes fade-in {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
   }
 
   @keyframes scale-in {
-    from { opacity: 0; transform: scale(0.95) translateY(10px); }
-    to { opacity: 1; transform: scale(1) translateY(0); }
+    from {
+      opacity: 0;
+      transform: scale(0.95) translateY(10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
   }
 
   @keyframes slide-up {
-    from { transform: translateY(100%); }
-    to { transform: translateY(0); }
+    from {
+      transform: translateY(100%);
+    }
+
+    to {
+      transform: translateY(0);
+    }
   }
 
 

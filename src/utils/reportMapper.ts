@@ -1,4 +1,4 @@
-import type { Report } from '../api/report';
+import type { Report } from '@/api';
 
 export interface ReportCardProps {
   id: number;
@@ -13,7 +13,7 @@ export interface ReportCardProps {
   description: string;
   timestamp: string;
   postedBy: string;
-  comments: any[]; // API might not have comments yet, keeping it empty for now
+  comments: never[]; // Comments are fetched separately via useComments hook
 }
 
 export const mapReportToCardProps = (report: Report): ReportCardProps => {
@@ -44,7 +44,7 @@ export const mapReportToCardProps = (report: Report): ReportCardProps => {
     shippingStatus: report.projectShipDate ? `Ship: ${report.projectShipDate}` : 'In Progress',
     progressTags,
     tags: generalTags,
-    images: images as any,
+    images,
     commentsCount: report.commentCount || 0,
     participantsCount: report.viewerCount || 0,
     timestamp: report.elapsedTime,

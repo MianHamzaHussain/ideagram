@@ -1,15 +1,17 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import Header from '../../components/Header/Header';
-import Tabs from '../../components/Tabs/Tabs';
-import Footer from '../../components/Footer/Footer';
-import ReportCard from '../../components/ReportCard/ReportCard';
-import { useInfiniteReports } from '../../hooks/useReports';
-import { mapReportToCardProps } from '../../utils/reportMapper';
-import InfiniteScrollSentinel from '../../components/InfiniteScrollSentinel/InfiniteScrollSentinel';
-import FiltersModal from '../../components/FiltersModal/FiltersModal';
-import { useFilterStore } from '../../store/useFilterStore';
-import AnimatedPage from '../../components/AnimatedPage/AnimatedPage';
+import {
+  Header,
+  Footer,
+  ReportCard,
+  InfiniteScrollSentinel,
+  FiltersModal,
+  AnimatedPage
+} from '@/components';
+import { useInfiniteReports } from '@/hooks';
+import { mapReportToCardProps } from '@/utils';
+import { useFilterStore } from '@/store';
+import Tabs from '@/components/Tabs/Tabs'; // Tabs is a dedicated folder component, can still be aliased
 
 const containerVariants = {
   hidden: { opacity: 0 },

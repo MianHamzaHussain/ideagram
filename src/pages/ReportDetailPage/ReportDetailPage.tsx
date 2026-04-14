@@ -1,23 +1,27 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
-import ImageCarousel from '../../components/ImageCarousel/ImageCarousel';
-import CommentsModal from '../../components/CommentsModal/CommentsModal';
-import PageHeader from '../../components/PageHeader/PageHeader';
-import DetailItem from '../../components/DetailItem/DetailItem';
-import StatusPill from '../../components/StatusPill/StatusPill';
-import CarouselIndicators from '../../components/CarouselIndicators/CarouselIndicators';
-import ReadersModal from '../../components/ReadersModal/ReadersModal';
-import { useReportDetails } from '../../hooks/useReportDetails';
-import { useInfiniteComments } from '../../hooks/useComments';
-import { useNotifiedUsers } from '../../hooks/useNotifiedUsers';
-import { useMarkAsViewed } from '../../hooks/useMarkAsViewed';
-import { useInfiniteViewers } from '../../hooks/useViewers';
-import { useAddViewer } from '../../hooks/useAddViewer';
-import CommentItem from '../../components/CommentItem/CommentItem';
-import ReaderItem from '../../components/ReaderItem/ReaderItem';
-import { getInitials } from '../../utils/stringUtils';
+import {
+  ImageCarousel,
+  CommentsModal,
+  PageHeader,
+  DetailItem,
+  StatusPill,
+  CarouselIndicators,
+  ReadersModal,
+  CommentItem,
+  ReaderItem,
+  AnimatedPage
+} from '@/components';
+import {
+  useReportDetails,
+  useInfiniteComments,
+  useNotifiedUsers,
+  useMarkAsViewed,
+  useInfiniteViewers,
+  useAddViewer
+} from '@/hooks';
+import { getInitials } from '@/utils';
 import { motion } from 'framer-motion';
-import AnimatedPage from '../../components/AnimatedPage/AnimatedPage';
 
 const ReportDetailPage = () => {
   const { id } = useParams();
@@ -42,12 +46,12 @@ const ReportDetailPage = () => {
       markAsViewedMutation.mutate(reportId);
       markedAsViewedRef.current = reportId;
     }
-    
+
     if (reportId && addedViewerRef.current !== reportId) {
       addViewerMutation.mutate(reportId);
       addedViewerRef.current = reportId;
     }
-  }, [reportId]);
+  }, [reportId, addViewerMutation, markAsViewedMutation]);
 
 
   if (isLoading && !report) {
@@ -91,14 +95,14 @@ const ReportDetailPage = () => {
 
   return (
     <AnimatedPage animationType="slide-up">
-      <div className="flex flex-col bg-[#414346]/20 h-full w-full max-w-[600px] h-[100dvh] mx-auto font-inter overflow-hidden">
+      <div className="flex flex-col bg-[#414346]/20  w-full max-w-[600px] h-[100dvh] mx-auto font-inter overflow-hidden">
         <div className="flex-1 bg-white rounded-t-[32px] flex flex-col overflow-hidden">
-          <PageHeader 
-            title={title} 
-            onBack={() => navigate(-1)} 
-            variant="default" 
-            centered={true} 
-            showBorder={false} 
+          <PageHeader
+            title={title}
+            onBack={() => navigate(-1)}
+            variant="default"
+            centered={true}
+            showBorder={false}
             showHandle={true}
           />
 
@@ -134,7 +138,7 @@ const ReportDetailPage = () => {
             <div className="flex flex-col gap-2 mb-6">
               <label className="font-inter font-bold text-[16px] leading-[120%] text-neutral-900 px-4">Media</label>
               <div className="w-full px-4">
-                <ImageCarousel images={images as any} onIndexChange={setActiveIndex} />
+                <ImageCarousel images={images} onIndexChange={setActiveIndex} />
                 <div className="flex justify-center items-center gap-[6px] mt-3">
                   <CarouselIndicators imagesCount={images.length} activeIndex={activeIndex} />
                 </div>

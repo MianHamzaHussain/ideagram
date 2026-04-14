@@ -6,15 +6,18 @@ import { motion, AnimatePresence } from 'framer-motion';
 interface TextFieldProps {
   label: string;
   name: string;
+  id?: string;
   type?: string;
   placeholder?: string;
   multiline?: boolean;
   height?: string;
-  [x: string]: any;
+  onFocus?: React.FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+  onBlur?: React.FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+  [x: string]: unknown;
 }
 
-const TextField = ({ label, type = 'text', multiline = false, height, ...props }: TextFieldProps) => {
-  const [field, meta] = useField(props);
+const TextField = ({ label, type = 'text', multiline = false, height, id, onFocus, onBlur, name, ...props }: TextFieldProps) => {
+  const [field, meta] = useField({ name, ...props } as any);
   const [showPassword, setShowPassword] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
 
@@ -39,7 +42,7 @@ const TextField = ({ label, type = 'text', multiline = false, height, ...props }
     <div className="flex flex-col gap-2 w-full">
       {label && (
         <label
-          htmlFor={props.id || props.name}
+          htmlFor={id || name}
           className="font-['Inter',sans-serif] font-bold text-[16px] text-neutral-900 px-1"
         >
           {label}
@@ -56,14 +59,15 @@ const TextField = ({ label, type = 'text', multiline = false, height, ...props }
           <textarea
             {...field}
             {...props}
+            id={id || name}
             onFocus={(e) => {
               setIsFocused(true);
-              props.onFocus?.(e);
+              onFocus?.(e);
             }}
             onBlur={(e) => {
               setIsFocused(false);
               field.onBlur(e);
-              props.onBlur?.(e);
+              onBlur?.(e);
             }}
             style={{ height: height || '120px' }}
             className={`${baseClasses} resize-none`}
@@ -72,14 +76,15 @@ const TextField = ({ label, type = 'text', multiline = false, height, ...props }
           <input
             {...field}
             {...props}
+            id={id || name}
             onFocus={(e) => {
               setIsFocused(true);
-              props.onFocus?.(e);
+              onFocus?.(e);
             }}
             onBlur={(e) => {
               setIsFocused(false);
               field.onBlur(e);
-              props.onBlur?.(e);
+              onBlur?.(e);
             }}
             type={inputType}
             className={`${baseClasses} h-12 pr-10`}
@@ -90,6 +95,7 @@ const TextField = ({ label, type = 'text', multiline = false, height, ...props }
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
+            aria-label={showPassword ? "Hide password" : "Show password"}
             className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 transition-colors"
           >
             {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}

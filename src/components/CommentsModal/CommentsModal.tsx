@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import CommentItem from '../CommentItem/CommentItem';
 import PageHeader from '../PageHeader/PageHeader';
-import { useInfiniteComments } from '../../hooks/useComments';
+import { useInfiniteComments } from '@/hooks';
 import InfiniteScrollSentinel from '../InfiniteScrollSentinel/InfiniteScrollSentinel';
 import CommentFormModal from '../CommentForm/CommentFormModal';
 

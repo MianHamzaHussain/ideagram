@@ -41,6 +41,8 @@ const BottomSheet = ({ isOpen, onClose, children, fullHeight = false }: BottomSh
                 onClose();
               }
             }}
+            role="dialog"
+            aria-modal="true"
             className={`
               relative w-full max-w-[600px] bg-white rounded-t-[32px] overflow-hidden 
               flex flex-col shadow-2xl

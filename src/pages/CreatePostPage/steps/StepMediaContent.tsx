@@ -5,9 +5,10 @@ import EditMediaModal, { type EditableMedia } from './EditMediaModal';
 import CameraCaptureModal from '../../../components/CameraCaptureModal/CameraCaptureModal';
 import { useMediaManager } from '../../../hooks/useMediaManager';
 import { IS_VIDEO_ENABLED } from '../../../utils/constants';
+import type { CreatePostFormValues } from '../types';
 
 const StepMediaContent = () => {
-  const { values, setFieldValue } = useFormikContext<any>();
+  const { values, setFieldValue } = useFormikContext<CreatePostFormValues>();
   const [editingMedia, setEditingMedia] = useState<EditableMedia | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -42,7 +43,7 @@ const StepMediaContent = () => {
   const handleSaveEdit = (updatedMedia: EditableMedia) => {
     // Pull the LATEST media list from values at the moment of saving
     const currentMediaList = values.media || [];
-    const newMediaList = currentMediaList.map((item: any) =>
+    const newMediaList = currentMediaList.map((item) =>
       item.id === updatedMedia.id ? updatedMedia : item
     );
     setFieldValue('media', newMediaList);

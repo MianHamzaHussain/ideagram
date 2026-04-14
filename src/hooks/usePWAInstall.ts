@@ -1,13 +1,5 @@
 import { useState, useEffect } from 'react';
 
-interface BeforeInstallPromptEvent extends Event {
-  readonly platforms: Array<string>;
-  readonly userChoice: Promise<{
-    outcome: 'accepted' | 'dismissed',
-    platform: string
-  }>;
-  prompt(): Promise<void>;
-}
 
 /**
  * Hook to handle PWA installation for both iOS and Android/Chrome.
@@ -29,13 +21,12 @@ export const usePWAInstall = () => {
     setIsAndroid(isAndroidDevice);
 
     // Detect if already installed (standalone mode)
-    // @ts-ignore - navigator.standalone is iOS-specific
-    const isIOSStandalone = (window.navigator as any).standalone;
+    const isIOSStandalone = 'standalone' in window.navigator && (window.navigator as Navigator & { standalone?: boolean }).standalone;
     const isGenericStandalone = window.matchMedia('(display-mode: standalone)').matches;
     setIsStandalone(!!(isIOSStandalone || isGenericStandalone));
 
     // Android/Chrome beforeinstallprompt event
-    const handler = (e: any) => {
+    const handler = (e: BeforeInstallPromptEvent) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
     };

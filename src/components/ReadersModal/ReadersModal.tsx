@@ -1,9 +1,7 @@
 import { useEffect } from 'react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
-import ReaderItem from '../ReaderItem/ReaderItem';
-import PageHeader from '../PageHeader/PageHeader';
-import { useInfiniteViewers } from '../../hooks/useViewers';
-import InfiniteScrollSentinel from '../InfiniteScrollSentinel/InfiniteScrollSentinel';
+import { ReaderItem, PageHeader, InfiniteScrollSentinel } from '@/components';
+import { useInfiniteViewers } from '@/hooks';
 
 interface ReadersModalProps {
   isOpen: boolean;

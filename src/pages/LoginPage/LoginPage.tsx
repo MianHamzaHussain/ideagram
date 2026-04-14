@@ -2,13 +2,11 @@ import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { useMutation } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
-import { authApi } from '../../api/auth';
-import { useAuthStore } from '../../store/useAuthStore';
-import TextField from '../../components/TextField/TextField';
-import Button from '../../components/Button/Button';
-import AnimatedPage from '../../components/AnimatedPage/AnimatedPage';
+import { authApi } from '@/api';
+import { useAuthStore } from '@/store';
+import { TextField, Button, AnimatedPage } from '@/components';
 import { toast } from 'react-toastify';
-import { getErrorMessage } from '../../utils/errorUtils';
+import { getErrorMessage } from '@/utils';
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string()
@@ -30,7 +28,7 @@ const LoginPage = () => {
       toast.success('Successfully logged in!');
       navigate('/');
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       const msg = getErrorMessage(error, 'Login Failed');
       toast.error(msg);
     },

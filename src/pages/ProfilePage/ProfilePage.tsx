@@ -1,24 +1,25 @@
+import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Edit2 } from 'react-feather';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import TextField from '../../components/TextField/TextField';
-import Button from '../../components/Button/Button';
-import BottomSheet from '../../components/BottomSheet/BottomSheet';
-import { useState, useRef, useEffect } from 'react';
-import { useAuthStore } from '../../store/useAuthStore';
-import { authApi } from '../../api/auth';
+import {
+  TextField,
+  Button,
+  BottomSheet,
+  PageHeader,
+  ConfirmModal,
+  CameraCaptureModal,
+  AnimatedPage
+} from '@/components';
+import { useAuthStore } from '@/store';
+import { authApi, userApi, type UserProfileUpdatePayload } from '@/api';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { userApi } from '../../api/user';
-import PageHeader from '../../components/PageHeader/PageHeader';
-import ConfirmModal from '../../components/Modal/ConfirmModal';
 import PasswordChangeSheet from './PasswordChangeSheet';
-import CameraCaptureModal from '../../components/CameraCaptureModal/CameraCaptureModal';
-import { useMediaManager } from '../../hooks/useMediaManager';
+import { useMediaManager } from '@/hooks';
 import { toast } from 'react-toastify';
-import { getErrorMessage } from '../../utils/errorUtils';
-import AnimatedPage from '../../components/AnimatedPage/AnimatedPage';
+import { getErrorMessage } from '@/utils';
 
 const ProfileSchema = Yup.object().shape({
   name: Yup.string().required('Name is required'),
@@ -210,7 +211,7 @@ const ProfilePage = () => {
             const firstName = nameParts[0] || '';
             const lastName = nameParts.slice(1).join(' ') || '';
 
-            const payload: any = {
+            const payload: UserProfileUpdatePayload = {
               firstName,
               lastName,
               bio: values.bio,

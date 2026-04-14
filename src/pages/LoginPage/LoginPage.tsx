@@ -18,7 +18,6 @@ const LoginSchema = Yup.object().shape({
 });
 
 const LoginPage = () => {
-  throw new Error("Simulated Crash");
   const navigate = useNavigate();
   const setAuth = useAuthStore((state) => state.setAuth);
 

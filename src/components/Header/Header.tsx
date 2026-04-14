@@ -38,6 +38,7 @@ const Header = ({ onFilterClick }: HeaderProps) => {
         whileTap={{ scale: 0.9 }}
         transition={{ type: "spring", stiffness: 400, damping: 17 }}
         onClick={onFilterClick}
+        aria-label="Open filters"
         className="text-neutral-800 hover:bg-neutral-50 rounded-full transition-colors flex items-center justify-center w-6 h-6 focus:outline-none"
       >
         <FilterIcon />
@@ -48,6 +49,7 @@ const Header = ({ onFilterClick }: HeaderProps) => {
         whileTap={{ scale: 0.9 }}
         transition={{ type: "spring", stiffness: 400, damping: 17 }}
         onClick={() => navigate('/search')}
+        aria-label="Search reports"
         className="text-neutral-800 hover:bg-neutral-50 rounded-full transition-colors flex items-center justify-center w-6 h-6 focus:outline-none"
       >
         <SearchIcon />

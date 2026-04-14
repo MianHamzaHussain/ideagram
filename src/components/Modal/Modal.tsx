@@ -33,6 +33,8 @@ const Modal = ({ isOpen, onClose, children, title }: ModalProps) => {
               stiffness: 400, 
               damping: 30 
             }}
+            role="dialog"
+            aria-modal="true"
             className="relative w-full max-w-[340px] bg-white rounded-[20px] p-6 shadow-2xl flex flex-col items-center z-10"
           >
             {title && (

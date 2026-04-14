@@ -87,6 +87,7 @@ const SearchPage = () => {
                 {keyword && (
                   <button
                     onClick={() => setKeyword('')}
+                    aria-label="Clear search"
                     className="absolute right-4 z-10 p-2 text-neutral-400 hover:text-neutral-600 transition-colors focus:outline-none"
                   >
                     <X size={16} strokeWidth={2.5} />

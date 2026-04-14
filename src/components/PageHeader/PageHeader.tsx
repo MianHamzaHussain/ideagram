@@ -83,6 +83,7 @@ const PageHeader = ({
             transition={{ type: "spring", stiffness: 400, damping: 20 }}
             type="button"
             onClick={handleBack}
+            aria-label={backIcon === 'arrow' ? "Go back" : "Close"}
             className="p-2 -ml-2 text-neutral-900 z-10 focus:outline-none"
           >
             {backIcon === 'arrow' ? (

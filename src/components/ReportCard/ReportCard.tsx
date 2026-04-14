@@ -75,7 +75,7 @@ const ReportCard = ({
         {/* Badges Container */}
         <div className="flex w-[96px] h-12">
           {/* Comments Badge */}
-          <div className="flex items-start w-[48px] h-12">
+          <div className="flex items-start w-[48px] h-12" role="button" aria-label={`${commentsCount} comments`}>
             <div className="w-[48px] h-[48px] p-3 flex items-center justify-center rounded-full transition-colors">
               <CustomChatIcon size={24} className="text-neutral-900" />
             </div>
@@ -85,7 +85,7 @@ const ReportCard = ({
             </div>
           </div>
           {/* Participants Badge */}
-          <div className="flex items-start w-[48px] h-12">
+          <div className="flex items-start w-[48px] h-12" role="button" aria-label={`${participantsCount} participants`}>
             <div className="w-[48px] h-[48px] p-3 flex items-center justify-center rounded-full hover:bg-neutral-50 transition-colors cursor-pointer">
               <User size={24} className="text-neutral-900" />
             </div>
@@ -99,7 +99,10 @@ const ReportCard = ({
         <CarouselIndicators imagesCount={images.length} activeIndex={activeIndex} />
 
         {/* Action Button - Call */}
-        <button className="w-12 h-12 p-3 flex items-center justify-center rounded-[100px] hover:bg-neutral-50 transition-colors text-neutral-900">
+        <button 
+          aria-label="Call project leader"
+          className="w-12 h-12 p-3 flex items-center justify-center rounded-[100px] hover:bg-neutral-50 transition-colors text-neutral-900"
+        >
           <PhoneCall size={24} />
         </button>
       </div>

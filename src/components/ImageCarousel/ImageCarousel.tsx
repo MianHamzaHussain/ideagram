@@ -70,7 +70,7 @@ const ImageCarousel = ({
   };
 
   return (
-    <div className="relative w-full flex flex-col">
+    <div className="relative w-full flex flex-col" role="region" aria-roledescription="carousel" aria-label="Media gallery">
       {/* Scroll Container (444px height) */}
       <div
         ref={scrollRef}
@@ -82,6 +82,9 @@ const ImageCarousel = ({
           <div
             key={index}
             className="flex-none w-[334px] h-[444px] flex flex-col snap-start"
+            role="group"
+            aria-roledescription="slide"
+            aria-label={`Slide ${index + 1} of ${images.length}`}
           >
             {/* Image/Video Container (403px height) */}
             <div className="w-full h-[403px] overflow-hidden bg-neutral-100">
@@ -89,6 +92,7 @@ const ImageCarousel = ({
                 <video
                   src={img.url}
                   className="w-full h-full object-cover"
+                  aria-label={img.caption || "Autoplaying media content"}
                   autoPlay
                   muted
                   loop
@@ -97,7 +101,7 @@ const ImageCarousel = ({
               ) : (
                 <img
                   src={img.url}
-                  alt={img.caption || `Slide ${index + 1}`}
+                  alt={img.caption || `Product image ${index + 1}`}
                   className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
                 />
               )}

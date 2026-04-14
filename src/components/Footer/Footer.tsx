@@ -20,6 +20,7 @@ const Footer = () => {
           <NavLink
             key={path}
             to={path}
+            aria-label={label}
             className={({ isActive }) =>
               `flex flex-col items-center gap-1 min-w-[64px] transition-colors py-4 ${isActive ? 'text-primary-300' : 'text-neutral-400'
               }`

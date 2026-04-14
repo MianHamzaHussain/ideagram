@@ -51,7 +51,7 @@ const ReportDetailPage = () => {
       addViewerMutation.mutate(reportId);
       addedViewerRef.current = reportId;
     }
-  }, [reportId]);
+  }, [reportId, addViewerMutation, markAsViewedMutation]);
 
 
   if (isLoading && !report) {

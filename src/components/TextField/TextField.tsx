@@ -59,6 +59,7 @@ const TextField = ({ label, type = 'text', multiline = false, height, id, onFocu
           <textarea
             {...field}
             {...props}
+            id={id || name}
             onFocus={(e) => {
               setIsFocused(true);
               onFocus?.(e);
@@ -75,6 +76,7 @@ const TextField = ({ label, type = 'text', multiline = false, height, id, onFocu
           <input
             {...field}
             {...props}
+            id={id || name}
             onFocus={(e) => {
               setIsFocused(true);
               onFocus?.(e);

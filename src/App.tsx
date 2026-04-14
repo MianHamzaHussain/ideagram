@@ -17,12 +17,14 @@ const NotificationsPage = lazy(() => import('@/pages/NotificationsPage/Notificat
 
 import ProtectedRoute from '@/components/auth/ProtectedRoute'
 import PublicRoute from '@/components/auth/PublicRoute'
+import ErrorBoundary, { RouteErrorFallback } from '@/components/ErrorBoundary'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
 const router = createBrowserRouter([
   {
     element: <ProtectedRoute />,
+    errorElement: <RouteErrorFallback />,
     children: [
       {
         element: <MainLayout />,
@@ -58,6 +60,7 @@ const router = createBrowserRouter([
 
   {
     element: <PublicRoute />,
+    errorElement: <RouteErrorFallback />,
     children: [
       {
         element: <AuthLayout />,
@@ -87,7 +90,7 @@ import PWAInstallPrompt from '@/components/PWAInstallPrompt/PWAInstallPrompt'
 
 function App() {
   return (
-    <>
+    <ErrorBoundary>
       <PWAInstallPrompt />
       <Suspense fallback={<SplashScreen />}>
         <RouterProvider router={router} />
@@ -104,7 +107,7 @@ function App() {
         pauseOnHover
         theme="light"
       />
-    </>
+    </ErrorBoundary>
   )
 }
 

@@ -21,18 +21,41 @@ const SearchIcon = () => (
   </svg>
 );
 
-const Header = () => {
+interface HeaderProps {
+  onFilterClick?: () => void;
+  onSearchClick?: () => void;
+}
+
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+
+const Header = ({ onFilterClick }: HeaderProps) => {
+  const navigate = useNavigate();
+
   return (
     <header className="flex items-center justify-between px-6 py-4 bg-white z-20">
-      <button className="text-neutral-800 hover:bg-neutral-50 rounded-full transition-colors active:scale-95 flex items-center justify-center w-6 h-6">
+      <motion.button 
+        whileTap={{ scale: 0.9 }}
+        transition={{ type: "spring", stiffness: 400, damping: 17 }}
+        onClick={onFilterClick}
+        className="text-neutral-800 hover:bg-neutral-50 rounded-full transition-colors flex items-center justify-center w-6 h-6 focus:outline-none"
+      >
         <FilterIcon />
-      </button>
+      </motion.button>
+
       <h1 className="heading-s text-neutral-900">Reports</h1>
-      <button className="text-neutral-800 hover:bg-neutral-50 rounded-full transition-colors active:scale-95 flex items-center justify-center w-6 h-6">
+      <motion.button 
+        whileTap={{ scale: 0.9 }}
+        transition={{ type: "spring", stiffness: 400, damping: 17 }}
+        onClick={() => navigate('/search')}
+        className="text-neutral-800 hover:bg-neutral-50 rounded-full transition-colors flex items-center justify-center w-6 h-6 focus:outline-none"
+      >
         <SearchIcon />
-      </button>
+      </motion.button>
     </header>
   );
 };
+
+
 
 export default Header;

@@ -6,7 +6,7 @@ import { authApi } from '../../api/auth';
 import { useAuthStore } from '../../store/useAuthStore';
 import TextField from '../../components/TextField/TextField';
 import Button from '../../components/Button/Button';
-
+import AnimatedPage from '../../components/AnimatedPage/AnimatedPage';
 import { toast } from 'react-toastify';
 import { getErrorMessage } from '../../utils/errorUtils';
 
@@ -37,52 +37,54 @@ const LoginPage = () => {
   });
 
   return (
-    <div className="flex flex-col items-center w-full px-0 pt-[20.4vh] gap-10 bg-transparent">
-      <div className="text-left w-full space-y-4">
-        <h1 className="heading-l text-neutral-900 leading-[1.2]">
-          Login
-        </h1>
-      </div>
+    <AnimatedPage animationType="fade">
+      <div className="flex flex-col items-center w-full px-6 pt-[20.4vh] gap-10 bg-transparent">
+        <div className="text-left w-full space-y-4">
+          <h1 className="heading-l text-neutral-900 leading-[1.2]">
+            Login
+          </h1>
+        </div>
 
-      <div className="w-full">
-        <Formik
-          initialValues={{ email: '', password: '' }}
-          validationSchema={LoginSchema}
-          onSubmit={(values) => {
-            loginMutation.mutate(values);
-          }}
-        >
-          {() => (
-            <Form className="flex flex-col gap-6 w-full">
-              <TextField
-                label="Email address"
-                name="email"
-                type="email"
-                placeholder="Email address"
-              />
-              <TextField
-                label="Password"
-                name="password"
-                type="password"
-                placeholder="Password"
-              />
+        <div className="w-full">
+          <Formik
+            initialValues={{ email: '', password: '' }}
+            validationSchema={LoginSchema}
+            onSubmit={(values) => {
+              loginMutation.mutate(values);
+            }}
+          >
+            {() => (
+              <Form className="flex flex-col gap-6 w-full">
+                <TextField
+                  label="Email address"
+                  name="email"
+                  type="email"
+                  placeholder="Email address"
+                />
+                <TextField
+                  label="Password"
+                  name="password"
+                  type="password"
+                  placeholder="Password"
+                />
 
-              <div className="mt-4">
-                <Button type="submit" isLoading={loginMutation.isPending}>
-                  Log in
-                </Button>
-              </div>
-            </Form>
-          )}
-        </Formik>
+                <div className="mt-4">
+                  <Button type="submit" isLoading={loginMutation.isPending}>
+                    Log in
+                  </Button>
+                </div>
+              </Form>
+            )}
+          </Formik>
 
-        <div className="flex justify-center w-full mt-8 pb-10">
-          <Link to="/forgot-password" className="text-center font-inter font-bold text-[14px] text-primary-300 cursor-pointer no-underline block hover:underline transition-colors tracking-wide">
-            Forgot your password?
-          </Link>
+          <div className="flex justify-center w-full mt-8 pb-10">
+            <Link to="/forgot-password" className="text-center font-inter font-bold text-[14px] text-primary-300 cursor-pointer no-underline block hover:underline transition-colors tracking-wide">
+              Forgot your password?
+            </Link>
+          </div>
         </div>
       </div>
-    </div>
+    </AnimatedPage>
   );
 };
 

@@ -1,37 +1,39 @@
-import type { ButtonHTMLAttributes } from 'react';
+import { motion, type HTMLMotionProps } from 'framer-motion';
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends HTMLMotionProps<"button"> {
   variant?: 'primary' | 'secondary' | 'outline' | 'navy' | 'brand-outline' | 'destructive';
   rounded?: 'xl' | 'full';
   isLoading?: boolean;
 }
 
-const Button = ({ 
-  children, 
-  variant = 'primary', 
+const Button = ({
+  children,
+  variant = 'primary',
   rounded = 'xl',
   isLoading = false,
-  className = '', 
-  ...props 
+  className = '',
+  ...props
 }: ButtonProps) => {
-  const baseStyles = `w-full px-6 py-[14px] cursor-pointer transition-all duration-200 ripple flex items-center justify-center gap-2 font-inter text-base font-bold select-none h-[48px] focus:outline-none 
+  const baseStyles = `w-full px-6 py-[14px] cursor-pointer transition-colors duration-200 ripple flex items-center justify-center gap-2 font-inter text-base font-bold select-none h-[48px] focus:outline-none 
     ${rounded === 'full' ? 'rounded-button' : 'rounded-xl'}`;
-  
+
   const variantStyles = {
-    primary: 'bg-brand-blue text-white hover:bg-primary-400 active:bg-primary-500 active:scale-95 border-none',
-    secondary: 'bg-neutral-50 text-neutral-900 hover:bg-neutral-100 active:bg-neutral-200 active:scale-95 border-none',
-    outline: 'border border-primary-300 text-primary-300 hover:bg-primary-50 active:scale-95',
-    navy: 'bg-[#004777] text-white hover:bg-[#00365a] active:bg-[#00253d] active:scale-95 border-none',
+    primary: 'bg-brand-blue text-white hover:bg-primary-400 border-none',
+    secondary: 'bg-neutral-50 text-neutral-900 hover:bg-neutral-100 border-none',
+    outline: 'border border-primary-300 text-primary-300 hover:bg-primary-50',
+    navy: 'bg-[#004777] text-white hover:bg-[#00365a] border-none',
     'brand-outline': '!h-[40px] border border-border-brand text-border-brand bg-transparent hover:bg-primary-50 rounded-md py-2 px-4 shadow-sm font-inter text-sm font-semibold',
-    destructive: 'bg-destructive text-white hover:opacity-90 active:scale-95 border-none',
+    destructive: 'bg-destructive text-white hover:opacity-90 border-none',
   };
 
   const disabledStyles = 'opacity-50 grayscale cursor-not-allowed transform-none';
-  
+
   const combinedClassName = `${baseStyles} ${variantStyles[variant]} ${props.disabled || isLoading ? disabledStyles : ''} ${className}`;
 
   return (
-    <button
+    <motion.button
+      whileTap={props.disabled || isLoading ? {} : { scale: 0.96 }}
+      transition={{ type: 'spring', stiffness: 500, damping: 30 }}
       className={combinedClassName}
       disabled={props.disabled || isLoading}
       {...props}
@@ -45,7 +47,7 @@ const Button = ({
           <span>Loading...</span>
         </div>
       ) : children}
-    </button>
+    </motion.button>
   );
 };
 

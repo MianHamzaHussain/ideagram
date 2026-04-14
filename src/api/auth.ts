@@ -5,8 +5,8 @@ export interface User {
   firstName: string;
   lastName: string;
   email: string;
-  role: string;
-  roleValue: number;
+  role: string | null;
+  roleValue: number | null;
   phone: string | null;
 }
 

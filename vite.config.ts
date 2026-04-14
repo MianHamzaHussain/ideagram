@@ -58,8 +58,11 @@ export default defineConfig({
     port: 4173,
     host: true,
     allowedHosts: [
-      'ideagram-mu.vercel.app',
+      '85f3-43-242-103-85.ngrok-free.app',
     ],
+    headers: {
+      'ngrok-skip-browser-warning': 'true'
+    },
     proxy: {
       '/api/v1': {
         target: 'https://ideagram.ideamakr.com/backend/api/v1/',

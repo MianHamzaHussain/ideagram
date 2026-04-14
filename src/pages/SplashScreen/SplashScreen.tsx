@@ -1,14 +1,29 @@
+import { motion } from 'framer-motion';
 import logo from '../../assets/logo.png';
 
 const SplashScreen = () => {
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-splash-bg z-[5000] animate-in fade-in duration-500">
-      <img 
-        src={logo} 
-        alt="Ideagram Logo" 
-        className="w-[230px] h-auto object-contain animate-in zoom-in-95 duration-700" 
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+      className="fixed inset-0 flex items-center justify-center bg-splash-bg z-[5000]"
+    >
+      <motion.img
+        src={logo}
+        alt="Ideagram Logo"
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{
+          type: "spring",
+          stiffness: 260,
+          damping: 20,
+          delay: 0.2
+        }}
+        className="w-[230px] h-auto object-contain"
       />
-    </div>
+    </motion.div>
   );
 };
 

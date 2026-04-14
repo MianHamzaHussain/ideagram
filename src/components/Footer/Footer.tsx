@@ -1,11 +1,15 @@
-import { Home, PlusCircle, Settings, User } from 'react-feather';
+import { Home, PlusCircle, Bell, User } from 'react-feather';
 import { NavLink } from 'react-router-dom';
+import { useUnviewedCount } from '../../hooks/useUnviewedCount';
 
 const Footer = () => {
+  const { data: countData } = useUnviewedCount();
+  const unviewedCount = countData?.count || 0;
+
   const navItems = [
     { icon: Home, label: 'Home', path: '/' },
     { icon: PlusCircle, label: 'New Post', path: '/create-post' },
-    { icon: Settings, label: 'Settings', path: '/settings' },
+    { icon: Bell, label: 'Alerts', path: '/notifications' },
     { icon: User, label: 'Profile', path: '/profile' },
   ];
 
@@ -21,7 +25,14 @@ const Footer = () => {
               }`
             }
           >
-            <Icon size={24} />
+            <div className="relative">
+              <Icon size={24} />
+              {label === 'Alerts' && (
+                <div className={`absolute -top-1 -right-1 flex items-center justify-center min-w-[18px] h-[18px] px-1 bg-brand-red text-white text-[10px] font-bold rounded-full border-2 border-white transition-transform ${unviewedCount > 0 ? 'scale-100' : 'scale-0'}`}>
+                  {unviewedCount > 99 ? '99+' : unviewedCount}
+                </div>
+              )}
+            </div>
             <span className="text-[10px] font-medium leading-none">{label}</span>
           </NavLink>
         ))}

@@ -9,8 +9,8 @@ const WarningIcon = ({ color }: { color: string }) => (
 );
 
 interface TabsProps {
-  activeTab: 'progress' | 'problem';
-  onTabChange: (tab: 'progress' | 'problem') => void;
+  activeTab: 'progress' | 'trouble';
+  onTabChange: (tab: 'progress' | 'trouble') => void;
 }
 
 const Tabs = ({ activeTab, onTabChange }: TabsProps) => {
@@ -30,20 +30,21 @@ const Tabs = ({ activeTab, onTabChange }: TabsProps) => {
         <span className="body-m">Progress</span>
       </button>
       <button
-        onClick={() => onTabChange('problem')}
+        onClick={() => onTabChange('trouble')}
         className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-xl transition-all duration-200 ${
-          activeTab === 'problem'
+          activeTab === 'trouble'
             ? 'bg-bg-brand-subtlest text-neutral-800 font-semibold shadow-sm'
             : 'text-neutral-400 font-medium'
         }`}
       >
         <div className="flex items-center justify-center w-6 h-6">
-          <WarningIcon color={activeTab === 'problem' ? 'var(--color-brand-orange)' : 'var(--color-neutral-300)'} />
+          <WarningIcon color={activeTab === 'trouble' ? 'var(--color-brand-orange)' : 'var(--color-neutral-300)'} />
         </div>
-        <span className="body-m">Problem</span>
+        <span className="body-m">Trouble</span>
       </button>
     </div>
   );
 };
+
 
 export default Tabs;

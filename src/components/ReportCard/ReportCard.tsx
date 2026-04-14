@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { User, PhoneCall } from 'react-feather';
 import { CustomChatIcon } from '../Icons/CustomIcons';
 import ImageCarousel from '../ImageCarousel/ImageCarousel';
@@ -38,7 +39,19 @@ const ReportCard = ({
   const [activeIndex, setActiveIndex] = useState(0);
 
   return (
-    <div className="bg-white w-full mb-4 font-inter">
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      whileTap={{ scale: 0.98 }}
+      transition={{
+        type: 'spring',
+        damping: 25,
+        stiffness: 300
+      }}
+      className="bg-white w-full mb-4 font-inter overflow-hidden cursor-pointer active:bg-neutral-50/50 transition-colors"
+    >
       {/* Header Section - Target 76px Height */}
       <div className="min-h-[76px] px-4 py-3 flex flex-col gap-1 justify-center">
         <h2 className="heading-m truncate w-full text-neutral-900">{title}</h2>
@@ -119,7 +132,7 @@ const ReportCard = ({
       </div>
       {/* Divider */}
       <div className="w-[98%] mx-auto h-[1px] bg-neutral-200"></div>
-    </div>
+    </motion.div>
   );
 };
 

@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import type { Viewer } from '../../api/report';
 import { getInitials } from '../../utils/stringUtils';
 
@@ -7,7 +8,11 @@ interface ReaderItemProps {
 
 const ReaderItem = ({ viewer }: ReaderItemProps) => {
   return (
-    <div className="flex items-center gap-3 w-full py-4 px-4 hover:bg-neutral-50/50 transition-colors font-inter min-h-[72px]">
+    <motion.div 
+      whileTap={{ scale: 0.98 }}
+      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+      className="flex items-center gap-3 w-full py-4 px-4 hover:bg-neutral-50/50 transition-colors cursor-pointer font-inter min-h-[72px]"
+    >
       {/* Avatar Placeholder (Stylized Initials) */}
       <div className="w-10 h-10 rounded-full bg-primary-50 flex items-center justify-center shrink-0 border border-primary-100 select-none">
         <span className="text-primary-600 font-bold text-sm">
@@ -26,7 +31,7 @@ const ReaderItem = ({ viewer }: ReaderItemProps) => {
           </span>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

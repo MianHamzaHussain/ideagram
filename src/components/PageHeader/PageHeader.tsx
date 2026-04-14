@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import { ArrowLeft, X } from 'react-feather';
 import { useNavigate } from 'react-router-dom';
 
@@ -59,28 +60,37 @@ const PageHeader = ({
       ${className}
     `}>
       {showHandle && (
-        <div className="flex justify-center items-start w-full h-[24px] pt-[12px] shrink-0">
+        <motion.button 
+          whileTap={{ opacity: 0.6 }}
+          type="button"
+          onClick={handleBack}
+          className="flex justify-center items-start w-full h-[24px] pt-[12px] shrink-0 transition-opacity focus:outline-none"
+          aria-label="Close modal"
+        >
           <div
             className="w-[36px] h-[5px] rounded-[100px] bg-[#CCCCCC]"
             style={{ mixBlendMode: 'plus-darker' as any }}
           />
-        </div>
+        </motion.button>
       )}
+
       <div className={`flex items-center relative h-[60px] px-4 w-full ${centered ? 'justify-between' : 'justify-start gap-3'}`}>
         {leftElement ? (
           <div className="z-10">{leftElement}</div>
         ) : showBack ? (
-          <button
+          <motion.button
+            whileTap={{ scale: 0.9 }}
+            transition={{ type: "spring", stiffness: 400, damping: 20 }}
             type="button"
             onClick={handleBack}
-            className="p-2 -ml-2 text-neutral-900 active:opacity-50 transition-opacity z-10 focus:outline-none"
+            className="p-2 -ml-2 text-neutral-900 z-10 focus:outline-none"
           >
             {backIcon === 'arrow' ? (
               <ArrowLeft size={24} strokeWidth={2.5} />
             ) : (
               <X size={24} strokeWidth={2.5} />
             )}
-          </button>
+          </motion.button>
         ) : null}
 
         {centered ? (
@@ -101,7 +111,7 @@ const PageHeader = ({
           </h1>
         )}
 
-        <div className="flex items-center gap-2 min-w-[24px] z-20">
+        <div className={`flex items-center gap-2 min-w-[24px] z-20 ${!centered ? 'flex-1' : ''}`}>
           {rightElement}
           {(!rightElement && centered && showBack) && <div className="w-6" />}
         </div>

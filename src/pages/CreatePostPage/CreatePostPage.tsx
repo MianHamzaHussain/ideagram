@@ -6,6 +6,8 @@ import StepIndicator from '../../components/StepIndicator/StepIndicator';
 import { useNavigate } from 'react-router-dom';
 import { reportApi } from '../../api/report';
 import { toast } from 'react-toastify';
+import { motion, AnimatePresence } from 'framer-motion';
+import AnimatedPage from '../../components/AnimatedPage/AnimatedPage';
 
 // Steps
 import StepType from './steps/StepType';
@@ -67,8 +69,24 @@ interface InitialValues {
   mentions: number[];
 }
 
+const stepVariants = {
+  initial: (direction: number) => ({
+    x: direction > 0 ? '10%' : '-10%',
+    opacity: 0
+  }),
+  animate: {
+    x: 0,
+    opacity: 1
+  },
+  exit: (direction: number) => ({
+    x: direction > 0 ? '-10%' : '10%',
+    opacity: 0
+  })
+};
+
 const CreatePostPage = () => {
   const [step, setStep] = useState(0);
+  const [direction, setDirection] = useState(0);
   const totalSteps = 6;
   const navigate = useNavigate();
 
@@ -91,10 +109,16 @@ const CreatePostPage = () => {
 
   const handleBack = () => {
     if (step > 0) {
+      setDirection(-1);
       setStep(step - 1);
     } else {
       navigate(-1);
     }
+  };
+
+  const handleNext = (nextStep: number) => {
+    setDirection(1);
+    setStep(nextStep);
   };
 
   const handleSubmit = async (values: InitialValues, { setSubmitting, setFieldValue }: FormikHelpers<InitialValues>) => {
@@ -218,78 +242,92 @@ const CreatePostPage = () => {
   };
 
   return (
-    <div className="relative flex flex-col bg-white h-full overflow-hidden w-full max-w-[600px] mx-auto">
-      <div className="flex-none">
-        <PageHeader
-          title="Create a post"
-          variant="creation"
-          onBack={handleBack}
-          showBorder={false}
-        />
-        <StepIndicator currentStep={step} totalSteps={totalSteps} />
+    <AnimatedPage animationType="slide-up">
+      <div className="relative flex flex-col bg-white h-full overflow-hidden w-full max-w-[600px] mx-auto">
+        <div className="flex-none">
+          <PageHeader
+            title="Create a post"
+            variant="creation"
+            onBack={handleBack}
+            showBorder={false}
+          />
+          <StepIndicator currentStep={step} totalSteps={totalSteps} />
+        </div>
+
+        <Formik
+          initialValues={initialValues}
+          validationSchema={CreatePostSchema}
+          onSubmit={handleSubmit}
+        >
+          {({ submitForm, isSubmitting }) => (
+            <>
+              {isSubmitting && (
+                <div className="absolute inset-0 bg-white/80 z-[100] flex items-center justify-center flex-col gap-4">
+                  <div className="w-12 h-12 border-4 border-brand-blue border-t-transparent rounded-full animate-spin" />
+                  <p className="font-bold text-brand-blue">
+                    {createdReportId ? 'Uploading Media...' : 'Creating Report...'}
+                  </p>
+                </div>
+              )}
+              <Form className="flex-1 flex flex-col min-h-0 overflow-hidden relative">
+                <AnimatePresence mode="wait" custom={direction}>
+                  <motion.div
+                    key={step}
+                    custom={direction}
+                    variants={stepVariants}
+                    initial="initial"
+                    animate="animate"
+                    exit="exit"
+                    transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                    className="flex-1 flex flex-col w-full h-full overflow-hidden"
+                  >
+                    {step === 0 && (
+                      <StepType
+                        onSelect={() => {
+                          handleNext(1);
+                        }}
+                      />
+                    )}
+
+                    {step === 1 && (
+                      <StepDetails
+                        onNext={() => handleNext(2)}
+                      />
+                    )}
+
+                    {step === 2 && (
+                      <StepPostDetails
+                        onNext={() => handleNext(3)}
+                      />
+                    )}
+
+                    {step === 3 && (
+                      <StepMedia
+                        onNext={() => handleNext(4)}
+                      />
+                    )}
+
+                    {step === 4 && (
+                      <StepNotifications
+                        onNext={() => handleNext(5)}
+                      />
+                    )}
+
+                    {step === 5 && (
+                      <StepReview
+                        error={formError}
+                        hasReportId={!!createdReportId}
+                        onNext={submitForm}
+                      />
+                    )}
+                  </motion.div>
+                </AnimatePresence>
+              </Form>
+            </>
+          )}
+        </Formik>
       </div>
-
-      <Formik
-        initialValues={initialValues}
-        validationSchema={CreatePostSchema}
-        onSubmit={handleSubmit}
-      >
-        {({ submitForm, isSubmitting }) => (
-          <>
-            {isSubmitting && (
-              <div className="absolute inset-0 bg-white/80 z-[100] flex items-center justify-center flex-col gap-4">
-                <div className="w-12 h-12 border-4 border-brand-blue border-t-transparent rounded-full animate-spin" />
-                <p className="font-bold text-brand-blue">
-                  {createdReportId ? 'Uploading Media...' : 'Creating Report...'}
-                </p>
-              </div>
-            )}
-            <Form className="flex-1 flex flex-col min-h-0 overflow-hidden">
-              {step === 0 && (
-                <StepType
-                  onSelect={() => {
-                    setStep(1);
-                  }}
-                />
-              )}
-
-              {step === 1 && (
-                <StepDetails
-                  onNext={() => setStep(2)}
-                />
-              )}
-
-              {step === 2 && (
-                <StepPostDetails
-                  onNext={() => setStep(3)}
-                />
-              )}
-
-              {step === 3 && (
-                <StepMedia
-                  onNext={() => setStep(4)}
-                />
-              )}
-
-              {step === 4 && (
-                <StepNotifications
-                  onNext={() => setStep(5)}
-                />
-              )}
-
-              {step === 5 && (
-                <StepReview
-                  error={formError}
-                  hasReportId={!!createdReportId}
-                  onNext={submitForm}
-                />
-              )}
-
-            </Form>
-          </>
-        )}
-      </Formik>
-    </div>
+    </AnimatedPage>
   );
 };
 

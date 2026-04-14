@@ -74,7 +74,7 @@ axiosInstance.interceptors.response.use(
         })
           .then((token) => {
             if (originalRequest.headers) {
-              originalRequest.headers.Authorization = `Bearer ${token}`;
+              originalRequest.headers.Authorization = `JWT ${token}`;
             }
             return axiosInstance(originalRequest);
           })

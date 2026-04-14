@@ -185,8 +185,9 @@
     to { transform: translateY(0); }
   }
 
+
   .animate-fade-in {
-    animation: fade-in 0.3s ease-out forwards;
+    animation: fade-in 0.3s cubic-bezier(0.32, 0.72, 0, 1) forwards;
   }
 
   .animate-scale-in {
@@ -194,6 +195,7 @@
   }
 
   .animate-slide-up {
-    animation: slide-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: slide-up 0.4s cubic-bezier(0.32, 0.72, 0, 1) forwards;
   }
+
 }

@@ -1,8 +1,8 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { projectApi, type InfiniteProjectResponse } from '../api/project';
+import { projectApi, type ProjectListResponse } from '../api/project';
 
 export const useInfiniteProjects = (keyword?: string) => {
-  return useInfiniteQuery<InfiniteProjectResponse>({
+  return useInfiniteQuery<ProjectListResponse>({
     queryKey: ['projects', 'infinite', keyword],
     queryFn: ({ pageParam }) =>
       projectApi.list({
@@ -13,12 +13,12 @@ export const useInfiniteProjects = (keyword?: string) => {
       }),
     initialPageParam: undefined,
     getNextPageParam: (lastPage) => {
-      // Defense against unexpected API response structure
-      if (!lastPage || !Array.isArray(lastPage) || lastPage.length === 0) return undefined;
-      const lastProject = lastPage[lastPage.length - 1];
-      if (!lastProject) return undefined;
-      return lastProject.id;
+      // Extract results and find the ID of the last item for pagination
+      const results = lastPage?.results || [];
+      if (results.length === 0) return undefined;
+      
+      const lastProject = results[results.length - 1];
+      return lastProject?.id;
     },
-
   });
 };

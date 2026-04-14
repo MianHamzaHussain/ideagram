@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import Header from '../../components/Header/Header';
 import Tabs from '../../components/Tabs/Tabs';
 import Footer from '../../components/Footer/Footer';
@@ -7,14 +7,33 @@ import ReportCard from '../../components/ReportCard/ReportCard';
 import { useInfiniteReports } from '../../hooks/useReports';
 import { mapReportToCardProps } from '../../utils/reportMapper';
 import InfiniteScrollSentinel from '../../components/InfiniteScrollSentinel/InfiniteScrollSentinel';
+import FiltersModal from '../../components/FiltersModal/FiltersModal';
+import { useFilterStore } from '../../store/useFilterStore';
+import AnimatedPage from '../../components/AnimatedPage/AnimatedPage';
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0 },
+};
 
 /**
  * Modern Industry-Standard PWA Home Page
  * Implements a sticky header/tabs, scrollable content, and fixed footer.
  */
 const HomePage = () => {
-  const [activeTab, setActiveTab] = useState<'progress' | 'problem'>('progress');
-  const navigate = useNavigate();
+  const { reportType, setReportType, tagIds, tagsMap } = useFilterStore();
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
   const {
     data,
@@ -22,62 +41,85 @@ const HomePage = () => {
     hasNextPage,
     isLoading,
     isError,
-  } = useInfiniteReports(activeTab);
+  } = useInfiniteReports({
+    reportType,
+    tags: tagsMap,
+  });
 
   const reports = data?.pages.flat() || [];
 
+  const handleApplyFilters = (filters: {
+    reportType?: 'progress' | 'trouble';
+    tagsMap: Record<number, number[]>;
+    tagIds: number[];
+  }) => {
+    if (filters.reportType) {
+      setReportType(filters.reportType);
+    }
+    useFilterStore.getState().setFilters({
+      tagIds: filters.tagIds,
+      tagsMap: filters.tagsMap
+    });
+  };
+
   return (
-    <div className="flex flex-col h-full bg-white overflow-hidden font-inter">
-      <Header />
-      <Tabs activeTab={activeTab} onTabChange={setActiveTab} />
+    <AnimatedPage animationType="fade">
+      <div className="flex flex-col h-full bg-white overflow-hidden font-inter">
+        <Header onFilterClick={() => setIsFilterModalOpen(true)} />
+        <Tabs activeTab={reportType} onTabChange={setReportType} />
 
-      {/* Scrollable Content Area */}
-      <main className="flex-1 flex flex-col overflow-y-auto px-4 py-4 scroll-smooth scrollbar-hide">
-        {isLoading ? (
-          <div className="flex flex-col gap-4">
-            {[1, 2, 3].map((n) => (
-              <div key={n} className="w-full h-[300px] bg-neutral-100 animate-pulse rounded-xl" />
-            ))}
-          </div>
-        ) : isError ? (
-          <div className="flex-1 flex flex-col items-center justify-center text-neutral-500">
-            <p>Failed to load reports</p>
-            <button onClick={() => window.location.reload()} className="text-secondary-300 font-bold mt-2 underline">Retry</button>
-          </div>
-        ) : reports.length > 0 ? (
-          <div className="space-y-4">
-            {reports.map((report) => (
-              <ReportCard key={report.id} {...mapReportToCardProps(report)} />
-            ))}
-            
-            <InfiniteScrollSentinel 
-              hasNextPage={hasNextPage} 
-              onIntersect={fetchNextPage} 
-              isLoading={isLoading} 
-            />
-          </div>
-        ) : (
-          <div className="flex-1 flex flex-col items-center justify-center w-full">
-            <div className="flex flex-col items-center justify-center p-4 h-[78px] gap-4">
-              <p className="font-inter font-normal text-[16px] leading-[140%] text-neutral-900 text-center">
-                No posts yet
-              </p>
-              <button
-                type="button"
-                onClick={() => navigate('/create-post')}
-                className="flex items-center justify-center w-[123px] h-[40px] px-4 py-2 gap-2 bg-splash-bg rounded-lg transition-transform active:scale-95"
-              >
-                <span className="font-inter font-semibold text-[16px] leading-[24px] text-white text-center">
-                  Create Post
-                </span>
-              </button>
+        {/* Scrollable Content Area */}
+        <main className="flex-1 flex flex-col overflow-y-auto px-4 py-4 scroll-smooth scrollbar-hide">
+          {isLoading && reports.length === 0 ? (
+            <div className="flex flex-col gap-4">
+              {[1, 2, 3].map((n) => (
+                <div key={n} className="w-full h-[300px] bg-neutral-100 animate-pulse rounded-xl" />
+              ))}
             </div>
-          </div>
-        )}
-      </main>
+          ) : isError ? (
+            <div className="flex-1 flex flex-col items-center justify-center text-neutral-500">
+              <p>Failed to load reports</p>
+              <button onClick={() => window.location.reload()} className="text-secondary-300 font-bold mt-2 underline">Retry</button>
+            </div>
+          ) : reports.length > 0 ? (
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              animate="show"
+              className="space-y-4"
+            >
+              {reports.map((report) => (
+                <motion.div key={report.id} variants={itemVariants}>
+                  <ReportCard {...mapReportToCardProps(report)} />
+                </motion.div>
+              ))}
 
-      <Footer />
-    </div>
+              <InfiniteScrollSentinel
+                hasNextPage={hasNextPage}
+                onIntersect={fetchNextPage}
+                isLoading={isLoading}
+              />
+            </motion.div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-20">
+              <p className="text-neutral-500 italic">No reports found matching your filters.</p>
+            </div>
+          )}
+        </main>
+
+        <Footer />
+
+        <FiltersModal
+          isOpen={isFilterModalOpen}
+          onClose={() => setIsFilterModalOpen(false)}
+          onApply={handleApplyFilters}
+          initialFilters={{
+            reportType: reportType,
+            tagIds: tagIds,
+          }}
+        />
+      </div>
+    </AnimatedPage>
   );
 };
 

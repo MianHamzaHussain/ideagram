@@ -18,6 +18,8 @@ export interface Project {
   modifiedOn: string;
 }
 
+export type InfiniteProjectResponse = Project[];
+
 export interface ProjectListResponse {
   count: number;
   next: string | null;
@@ -26,7 +28,31 @@ export interface ProjectListResponse {
 }
 
 export const projectApi = {
-  list: async (page = 1, pageSize = 50): Promise<ProjectListResponse> => {
-    return apiClient.get<ProjectListResponse>(`project/?page=${page}&page_size=${pageSize}`);
+  list: async (params: {
+    pag_type: string;
+    before_id?: number;
+    page_size?: number;
+    keyword?: string;
+  }): Promise<InfiniteProjectResponse> => {
+    const queryParams = new URLSearchParams({
+      pag_type: params.pag_type,
+    });
+
+    if (params.before_id) {
+      queryParams.append('before_id', params.before_id.toString());
+    }
+
+    if (params.page_size) {
+      queryParams.append('page_size', params.page_size.toString());
+    }
+
+    if (params.keyword) {
+      queryParams.append('keyword', params.keyword);
+      queryParams.append('search_type', 'mobile');
+    }
+
+    return apiClient.get<InfiniteProjectResponse>(`project/?${queryParams.toString()}`);
   },
 };
+
+

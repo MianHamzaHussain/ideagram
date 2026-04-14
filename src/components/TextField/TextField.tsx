@@ -1,6 +1,7 @@
 import { useField } from 'formik';
 import { useState } from 'react';
 import { Eye, EyeOff } from 'react-feather';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface TextFieldProps {
   label: string;
@@ -15,34 +16,55 @@ interface TextFieldProps {
 const TextField = ({ label, type = 'text', multiline = false, height, ...props }: TextFieldProps) => {
   const [field, meta] = useField(props);
   const [showPassword, setShowPassword] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
 
   const isPassword = type === 'password';
   const inputType = isPassword ? (showPassword ? 'text' : 'password') : type;
 
   const baseClasses = `
     w-full px-4 py-3 
-    bg-white border border-[#D5D5D5] rounded-xl 
+    bg-white border rounded-xl 
     font-['Inter',sans-serif] text-[15px] text-neutral-900 
     placeholder:text-neutral-400
-    focus:border-brand-blue outline-none transition-all
-    ${meta.touched && meta.error ? 'border-brand-red focus:border-brand-red ring-brand-red/10' : ''}
+    outline-none transition-all duration-300
+    ${meta.touched && meta.error
+      ? 'border-brand-red ring-4 ring-brand-red/5'
+      : isFocused
+        ? 'border-brand-blue ring-4 ring-brand-blue/5'
+        : 'border-[#D5D5D5]'
+    }
   `;
 
   return (
     <div className="flex flex-col gap-2 w-full">
       {label && (
-        <label 
-          htmlFor={props.id || props.name} 
+        <label
+          htmlFor={props.id || props.name}
           className="font-['Inter',sans-serif] font-bold text-[16px] text-neutral-900 px-1"
         >
           {label}
         </label>
       )}
-      <div className="relative w-full">
+      <motion.div
+        animate={{
+          scale: isFocused ? 1.01 : 1,
+        }}
+        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+        className="relative w-full"
+      >
         {multiline ? (
           <textarea
             {...field}
             {...props}
+            onFocus={(e) => {
+              setIsFocused(true);
+              props.onFocus?.(e);
+            }}
+            onBlur={(e) => {
+              setIsFocused(false);
+              field.onBlur(e);
+              props.onBlur?.(e);
+            }}
             style={{ height: height || '120px' }}
             className={`${baseClasses} resize-none`}
           />
@@ -50,11 +72,20 @@ const TextField = ({ label, type = 'text', multiline = false, height, ...props }
           <input
             {...field}
             {...props}
+            onFocus={(e) => {
+              setIsFocused(true);
+              props.onFocus?.(e);
+            }}
+            onBlur={(e) => {
+              setIsFocused(false);
+              field.onBlur(e);
+              props.onBlur?.(e);
+            }}
             type={inputType}
             className={`${baseClasses} h-12 pr-10`}
           />
         )}
-        
+
         {isPassword && !multiline && (
           <button
             type="button"
@@ -64,12 +95,19 @@ const TextField = ({ label, type = 'text', multiline = false, height, ...props }
             {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
           </button>
         )}
-      </div>
-      {meta.touched && meta.error ? (
-        <div className="text-brand-red text-[12px] font-normal font-inter px-1">
-          {meta.error}
-        </div>
-      ) : null}
+      </motion.div>
+      <AnimatePresence>
+        {meta.touched && meta.error && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="text-brand-red text-[12px] font-normal font-inter px-1"
+          >
+            {meta.error}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

@@ -80,8 +80,11 @@ export const reportApi = {
   list: async (params: {
     pag_type: string;
     before_id?: number;
-    report_type?: string;
+    report_type?: 'progress' | 'trouble';
     page_size?: number;
+    keyword?: string;
+    project_id?: number;
+    tags?: Record<number, number[]>; // Map of tagTypeId -> tagIds[]
   }): Promise<InfiniteReportResponse> => {
     const queryParams = new URLSearchParams({
       pag_type: params.pag_type,
@@ -99,8 +102,25 @@ export const reportApi = {
       queryParams.append('page_size', params.page_size.toString());
     }
 
+    if (params.keyword) {
+      queryParams.append('keyword', params.keyword);
+      queryParams.append('search_type', 'mobile');
+    }
+
+    if (params.project_id) {
+      queryParams.append('project_id', params.project_id.toString());
+    }
+
+    if (params.tags && Object.keys(params.tags).length > 0) {
+      // Advanced Filtering: Base64-encoded JSON map
+      const jsonString = JSON.stringify(params.tags);
+      const encodedTags = btoa(unescape(encodeURIComponent(jsonString)));
+      queryParams.append('tags', encodedTags);
+    }
+
     return apiClient.get<InfiniteReportResponse>(`report/?${queryParams.toString()}`);
   },
+
 
   getById: async (id: number): Promise<Report> => {
     return apiClient.get<Report>(`report/${id}/`);
@@ -123,6 +143,10 @@ export const reportApi = {
     if (params.pag_type) queryParams.append('pag_type', params.pag_type);
 
     return apiClient.get<Viewer[]>(`report/viewers/list/?${queryParams.toString()}`);
+  },
+
+  addViewer: async (reportId: number): Promise<{ detail: string }> => {
+    return apiClient.post<{ detail: string }>('add/viewer/report/', { report: reportId });
   },
 };
 

@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import Modal from './Modal';
 import Button from '../Button/Button';
 
@@ -38,12 +39,14 @@ const ConfirmModal = ({
           >
             {cancelText}
           </Button>
-          <button 
+          <motion.button 
+            whileTap={{ scale: 0.96 }}
+            transition={{ type: 'spring', stiffness: 500, damping: 30 }}
             type="button"
             onClick={onConfirm}
             disabled={isLoading}
             className={`
-              w-full h-[54px] rounded-button font-inter text-[18px] transition-opacity active:opacity-70 flex items-center justify-center gap-2
+              w-full h-[54px] rounded-button font-inter text-[18px] transition-colors flex items-center justify-center gap-2
               ${variant === 'destructive' 
                 ? 'bg-overlay-secondary text-brand-red font-medium' 
                 : 'bg-overlay-secondary text-neutral-900 font-bold'}
@@ -57,10 +60,11 @@ const ConfirmModal = ({
               </svg>
             )}
             {isLoading ? 'Deleting...' : confirmText}
-          </button>
+          </motion.button>
         </div>
       </div>
     </Modal>
   );
 };
+
 export default ConfirmModal;

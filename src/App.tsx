@@ -12,6 +12,8 @@ const ProfilePage = lazy(() => import('./pages/ProfilePage/ProfilePage'))
 const HomePage = lazy(() => import('./pages/HomePage/HomePage'))
 const ReportDetailPage = lazy(() => import('./pages/ReportDetailPage/ReportDetailPage'))
 const CreatePostPage = lazy(() => import('./pages/CreatePostPage/CreatePostPage'))
+const SearchPage = lazy(() => import('./pages/SearchPage/SearchPage'))
+const NotificationsPage = lazy(() => import('./pages/NotificationsPage/NotificationsPage'))
 
 import ProtectedRoute from './components/auth/ProtectedRoute'
 import PublicRoute from './components/auth/PublicRoute'
@@ -33,18 +35,27 @@ const router = createBrowserRouter([
             path: '/profile',
             element: <ProfilePage />,
           },
+          {
+            path: '/report/:id',
+            element: <ReportDetailPage />,
+          },
+          {
+            path: '/create-post',
+            element: <CreatePostPage />,
+          },
+          {
+            path: '/search',
+            element: <SearchPage />,
+          },
+          {
+            path: '/notifications',
+            element: <NotificationsPage />,
+          },
         ],
-      },
-      {
-        path: '/report/:id',
-        element: <ReportDetailPage />,
-      },
-      {
-        path: '/create-post',
-        element: <CreatePostPage />,
       },
     ],
   },
+
   {
     element: <PublicRoute />,
     children: [

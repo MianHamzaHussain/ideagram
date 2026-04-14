@@ -4,6 +4,7 @@ import SelectionGroup from '../../../components/SelectionGroup/SelectionGroup';
 import SelectablePill from '../../../components/SelectablePill/SelectablePill';
 import SelectField from '../../../components/SelectField/SelectField';
 import { useProjects } from '../../../hooks/useProjects';
+import type { Project } from '../../../api/project';
 import { useTags } from '../../../hooks/useTags';
 import type { Tag } from '../../../api/tag';
 
@@ -28,7 +29,7 @@ const StepDetailsContent = () => {
   const { data: projectsData, isLoading: isProjectsLoading } = useProjects();
   const { data: tags = [], isLoading: isTagsLoading } = useTags(values.reportType);
 
-  const projects = projectsData?.results || [];
+  const projects = projectsData || [];
 
   // Cleanup: Remove any tags that don't belong to the current reportType
   useEffect(() => {
@@ -84,7 +85,7 @@ const StepDetailsContent = () => {
     }
   };
 
-  const projectOptions = projects.map(p => ({
+  const projectOptions = projects.map((p: Project) => ({
     label: p.name,
     value: p.id.toString()
   }));

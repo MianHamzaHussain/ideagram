@@ -8,6 +8,7 @@ import { reportApi } from '../../api/report';
 import { toast } from 'react-toastify';
 import { motion, AnimatePresence } from 'framer-motion';
 import AnimatedPage from '../../components/AnimatedPage/AnimatedPage';
+import { getErrorMessage } from '../../utils/errorUtils';
 
 // Steps
 import StepType from './steps/StepType';
@@ -230,13 +231,9 @@ const CreatePostPage = () => {
         toast.success('Report published successfully!');
       }
       navigate('/');
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Submission Error:', error);
-      // Extract backend error message if available
-      const message = error.response?.data?.nonFieldErrors?.[0] ||
-        error.response?.data?.detail ||
-        error.message ||
-        'Failed to create report. Please try again.';
+      const message = getErrorMessage(error, 'Failed to create report. Please try again.');
       setFormError(message);
       toast.error(message);
     } finally {

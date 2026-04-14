@@ -10,7 +10,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useAuthStore } from '../../store/useAuthStore';
 import { authApi } from '../../api/auth';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { userApi } from '../../api/user';
+import { userApi, type UserProfileUpdatePayload } from '../../api/user';
 import PageHeader from '../../components/PageHeader/PageHeader';
 import ConfirmModal from '../../components/Modal/ConfirmModal';
 import PasswordChangeSheet from './PasswordChangeSheet';
@@ -210,7 +210,7 @@ const ProfilePage = () => {
             const firstName = nameParts[0] || '';
             const lastName = nameParts.slice(1).join(' ') || '';
 
-            const payload: any = {
+            const payload: UserProfileUpdatePayload = {
               firstName,
               lastName,
               bio: values.bio,

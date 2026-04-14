@@ -69,7 +69,7 @@ const PageHeader = ({
         >
           <div
             className="w-[36px] h-[5px] rounded-[100px] bg-[#CCCCCC]"
-            style={{ mixBlendMode: 'plus-darker' as any }}
+            style={{ mixBlendMode: 'plus-darker' as React.CSSProperties['mixBlendMode'] }}
           />
         </motion.button>
       )}

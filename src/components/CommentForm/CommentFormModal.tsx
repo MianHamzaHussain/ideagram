@@ -1,4 +1,4 @@
-import { Formik } from 'formik';
+import { Formik, type FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import BottomSheet from '../BottomSheet/BottomSheet';
 import PageHeader from '../PageHeader/PageHeader';
@@ -34,7 +34,7 @@ const CommentFormModal = ({
   const createMutation = useCreateComment(reportId);
   const updateMutation = useUpdateComment(reportId);
 
-  const handleSubmit = async (values: { text: string }, { setSubmitting }: any) => {
+  const handleSubmit = async (values: { text: string }, { setSubmitting }: FormikHelpers<{ text: string }>) => {
     try {
       if (mode === 'create') {
         await createMutation.mutateAsync(values.text);

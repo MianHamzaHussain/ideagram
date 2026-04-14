@@ -5,11 +5,12 @@
  * 2. Auth 'detail' errors
  * 3. General field validation arrays
  */
-export const getErrorMessage = (error: any, fallback: string = 'An unexpected error occurred'): string => {
+export const getErrorMessage = (error: unknown, fallback: string = 'An unexpected error occurred'): string => {
   if (!error) return fallback;
 
   // Handle Axios response structure
-  const data = error.response?.data;
+  const axiosError = error as { response?: { data?: Record<string, unknown> }; message?: string };
+  const data = axiosError.response?.data;
 
   if (data) {
     // Priority 1: Auth or System-level 'detail' (Status 401/403/etc.)
@@ -47,8 +48,8 @@ export const getErrorMessage = (error: any, fallback: string = 'An unexpected er
   }
 
   // Priority 4: Axios-level message (e.g. "Network Error")
-  if (error.message && typeof error.message === 'string') {
-    return error.message;
+  if (axiosError.message && typeof axiosError.message === 'string') {
+    return axiosError.message;
   }
 
   return fallback;

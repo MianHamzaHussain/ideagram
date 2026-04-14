@@ -258,7 +258,7 @@ const EditMediaModal = ({ media, onSave, onClose }: EditMediaModalProps) => {
                       </div>
                       <select 
                         value={strokeWidth} 
-                        onChange={(e) => setStrokeWidth(e.target.value as any)}
+                        onChange={(e) => setStrokeWidth(e.target.value as 'small' | 'medium' | 'large')}
                         className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
                       >
                         <option value="small">S</option>

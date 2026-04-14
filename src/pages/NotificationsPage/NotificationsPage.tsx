@@ -5,6 +5,7 @@ import { MessageSquare, FileText } from 'react-feather';
 import { useInfiniteNotifications } from '../../hooks/useNotifications';
 import PageHeader from '../../components/PageHeader/PageHeader';
 import AnimatedPage from '../../components/AnimatedPage/AnimatedPage';
+import type { Notification } from '../../api/notification';
 
 const NotificationsPage = () => {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ const NotificationsPage = () => {
 
   const notifications = data?.pages.flatMap((page) => page) || [];
 
-  const handleNotificationClick = (notification: any) => {
+  const handleNotificationClick = (notification: Notification) => {
     // Navigate based on type (simple implementation)
     if (notification.report) {
       navigate(`/report/${notification.report}`);

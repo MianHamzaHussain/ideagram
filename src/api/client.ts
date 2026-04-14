@@ -1,4 +1,4 @@
-import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
+import axios, { AxiosError, type InternalAxiosRequestConfig, type AxiosRequestConfig } from 'axios';
 import { useAuthStore } from '../store/useAuthStore';
 
 export const BASE_URL = '/api/v1/';
@@ -34,10 +34,10 @@ axiosInstance.interceptors.request.use(
 let isRefreshing = false;
 let failedQueue: Array<{
   resolve: (token: string) => void;
-  reject: (err: any) => void;
+  reject: (err: unknown) => void;
 }> = [];
 
-const processQueue = (error: any, token: string | null = null) => {
+const processQueue = (error: unknown, token: string | null = null) => {
   failedQueue.forEach((prom) => {
     if (error) {
       prom.reject(error);
@@ -120,8 +120,11 @@ axiosInstance.interceptors.response.use(
 
 export const apiClient = {
   get: <T>(url: string) => axiosInstance.get<T>(url).then((res) => res.data),
-  post: <T>(url: string, body: any, config?: any) => axiosInstance.post<T>(url, body, config).then((res) => res.data),
-  put: <T>(url: string, body: any, config?: any) => axiosInstance.put<T>(url, body, config).then((res) => res.data),
-  patch: <T>(url: string, body: any, config?: any) => axiosInstance.patch<T>(url, body, config).then((res) => res.data),
+  post: <T>(url: string, body?: unknown, config?: AxiosRequestConfig) =>
+    axiosInstance.post<T>(url, body, config).then((res) => res.data),
+  put: <T>(url: string, body?: unknown, config?: AxiosRequestConfig) =>
+    axiosInstance.put<T>(url, body, config).then((res) => res.data),
+  patch: <T>(url: string, body?: unknown, config?: AxiosRequestConfig) =>
+    axiosInstance.patch<T>(url, body, config).then((res) => res.data),
   delete: <T>(url: string) => axiosInstance.delete<T>(url).then((res) => res.data),
 };

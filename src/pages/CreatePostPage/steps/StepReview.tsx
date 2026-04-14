@@ -2,6 +2,7 @@ import { useFormikContext } from 'formik';
 import StepLayout from './StepLayout';
 import Button from '../../../components/Button/Button';
 import FormError from '../../../components/FormError/FormError';
+import type { CreatePostFormValues } from '../types';
 
 // Reusable Content Sections
 import StepDetailsContent from './StepDetailsContent';
@@ -10,9 +11,9 @@ import StepMediaContent from './StepMediaContent';
 import StepNotificationsContent from './StepNotificationsContent';
 
 const StepReview = ({ onNext, error, hasReportId }: { onNext: () => void; error?: string | null; hasReportId?: boolean }) => {
-  const { setFieldValue, submitForm, values } = useFormikContext<any>();
+  const { setFieldValue, submitForm, values } = useFormikContext<CreatePostFormValues>();
 
-  const pendingUploads = values.media?.some((m: any) => !m.uploaded);
+  const pendingUploads = values.media?.some((m) => !m.uploaded);
   const showRetryText = hasReportId && pendingUploads;
 
   const CustomFooter = (

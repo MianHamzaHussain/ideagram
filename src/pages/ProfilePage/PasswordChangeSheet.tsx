@@ -28,7 +28,7 @@ const PasswordChangeSheet = ({ isOpen, onClose }: PasswordChangeSheetProps) => {
       toast.success(data?.detail || 'Password changed successfully!');
       onClose();
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       const msg = getErrorMessage(error, 'Failed to change password');
       toast.error(msg);
     }

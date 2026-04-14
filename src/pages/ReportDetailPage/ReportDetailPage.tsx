@@ -134,7 +134,7 @@ const ReportDetailPage = () => {
             <div className="flex flex-col gap-2 mb-6">
               <label className="font-inter font-bold text-[16px] leading-[120%] text-neutral-900 px-4">Media</label>
               <div className="w-full px-4">
-                <ImageCarousel images={images as any} onIndexChange={setActiveIndex} />
+                <ImageCarousel images={images} onIndexChange={setActiveIndex} />
                 <div className="flex justify-center items-center gap-[6px] mt-3">
                   <CarouselIndicators imagesCount={images.length} activeIndex={activeIndex} />
                 </div>

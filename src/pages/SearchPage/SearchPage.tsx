@@ -59,9 +59,7 @@ const SearchPage = () => {
   } = useInfiniteProjects(activeCategory === 'project' ? debouncedKeyword : '');
 
   const reports = reportData?.pages.flat() || [];
-  const projects = projectData?.pages.flatMap(page =>
-    Array.isArray(page) ? page : (page as any).results || []
-  ) || [];
+  const projects = projectData?.pages.flatMap(page => page.results || []) || [];
 
   return (
     <AnimatedPage animationType="slide-up">

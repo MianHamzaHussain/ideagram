@@ -30,7 +30,7 @@ const LoginPage = () => {
       toast.success('Successfully logged in!');
       navigate('/');
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       const msg = getErrorMessage(error, 'Login Failed');
       toast.error(msg);
     },

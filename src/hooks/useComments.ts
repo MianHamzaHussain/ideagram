@@ -1,4 +1,4 @@
-import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { commentApi, type Comment } from '../api/comment';
 
 export const useInfiniteComments = (reportId: number) => {
@@ -21,7 +21,7 @@ export const useInfiniteComments = (reportId: number) => {
   });
 };
 
-const invalidateCommentQueries = (queryClient: any, reportId: number) => {
+const invalidateCommentQueries = (queryClient: QueryClient, reportId: number) => {
   queryClient.invalidateQueries({ queryKey: ['comments', reportId] });
   queryClient.invalidateQueries({ queryKey: ['report', reportId] });
 };

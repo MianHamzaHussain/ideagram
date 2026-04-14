@@ -8,7 +8,8 @@ import {
   InfiniteScrollSentinel,
   SelectablePill,
   PageHeader,
-  AnimatedPage
+  AnimatedPage,
+  PageMeta
 } from '@/components';
 import { Search as SearchIcon, X } from 'react-feather';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -63,6 +64,7 @@ const SearchPage = () => {
 
   return (
     <AnimatedPage animationType="slide-up">
+      <PageMeta title="Search" description="Search for specific project reports or projects." />
       <div className="flex flex-col bg-[#414346]/20 h-full w-full max-w-[600px] h-[100dvh] mx-auto font-inter overflow-hidden">
         <div className="flex-1 bg-white rounded-t-[32px] flex flex-col overflow-hidden">
           <PageHeader

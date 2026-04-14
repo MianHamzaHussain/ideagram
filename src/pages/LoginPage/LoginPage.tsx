@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
 import { authApi } from '@/api';
 import { useAuthStore } from '@/store';
-import { TextField, Button, AnimatedPage } from '@/components';
+import { TextField, Button, AnimatedPage, PageMeta } from '@/components';
 import { toast } from 'react-toastify';
 import { getErrorMessage } from '@/utils';
 
@@ -36,6 +36,7 @@ const LoginPage = () => {
 
   return (
     <AnimatedPage animationType="fade">
+      <PageMeta title="Login" description="Sign in to your Ideagram account." />
       <div className="flex flex-col items-center w-full px-6 pt-[20.4vh] gap-10 bg-transparent">
         <div className="text-left w-full space-y-4">
           <h1 className="heading-l text-neutral-900 leading-[1.2]">

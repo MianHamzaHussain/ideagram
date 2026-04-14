@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Formik, Form, type FormikHelpers } from 'formik';
 import * as Yup from 'yup';
-import { PageHeader, StepIndicator, AnimatedPage } from '@/components';
+import { PageHeader, StepIndicator, AnimatedPage, PageMeta } from '@/components';
 import { useNavigate } from 'react-router-dom';
 import { reportApi } from '@/api';
 import { toast } from 'react-toastify';
@@ -241,6 +241,7 @@ const CreatePostPage = () => {
 
   return (
     <AnimatedPage animationType="slide-up">
+      <PageMeta title="Create Report" description="Draft and publish a new project progress or trouble report." />
       <div className="relative flex flex-col bg-white h-full overflow-hidden w-full max-w-[600px] mx-auto">
         <div className="flex-none">
           <PageHeader

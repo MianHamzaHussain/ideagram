@@ -11,7 +11,8 @@ import {
   PageHeader,
   ConfirmModal,
   CameraCaptureModal,
-  AnimatedPage
+  AnimatedPage,
+  PageMeta
 } from '@/components';
 import { useAuthStore } from '@/store';
 import { authApi, userApi, type UserProfileUpdatePayload } from '@/api';
@@ -177,6 +178,7 @@ const ProfilePage = () => {
   if (isProfileLoading) {
     return (
       <AnimatedPage animationType="push">
+        <PageMeta title="Profile" description="View and edit your profile settings." />
         <div className="flex flex-col bg-white h-full overflow-hidden animate-pulse">
           <PageHeader title="Profile" onBack={() => navigate(-1)} centered={true} showBorder={false} />
           <div className="flex-1 px-[10px] pb-10 overflow-y-auto scrollbar-hide">
@@ -197,6 +199,7 @@ const ProfilePage = () => {
 
   return (
     <AnimatedPage animationType="push">
+      <PageMeta title="Profile" description="View and edit your profile settings." />
       <div className="flex flex-col bg-white h-full overflow-hidden">
         <Formik
           enableReinitialize={true}

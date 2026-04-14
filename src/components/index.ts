@@ -26,3 +26,5 @@ export { default as SelectionGroup } from './SelectionGroup/SelectionGroup';
 export { default as StatusPill } from './StatusPill/StatusPill';
 export { default as StepIndicator } from './StepIndicator/StepIndicator';
 export { default as TextField } from './TextField/TextField';
+export { default as ErrorBoundary } from './ErrorBoundary';
+export { default as PageMeta } from './PageMeta';

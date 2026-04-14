@@ -7,7 +7,7 @@ import AuthLayout from './layouts/AuthLayout/AuthLayout'
 
 // Pages (Lazy Loaded)
 const LoginPage = lazy(() => import('./pages/LoginPage/LoginPage'))
-const ForgotPasswordPage = lazy(() => import('./pages/ForgotPassword/ForgotPassword'))
+const ForgotPasswordPage = lazy(() => import('./pages/ForgotPasswordPage/ForgotPasswordPage'))
 const ProfilePage = lazy(() => import('./pages/ProfilePage/ProfilePage'))
 const HomePage = lazy(() => import('./pages/HomePage/HomePage'))
 const ReportDetailPage = lazy(() => import('./pages/ReportDetailPage/ReportDetailPage'))
@@ -92,7 +92,7 @@ function App() {
       <Suspense fallback={<SplashScreen />}>
         <RouterProvider router={router} />
       </Suspense>
-      <ToastContainer 
+      <ToastContainer
         position="top-right"
         autoClose={3000}
         hideProgressBar={false}

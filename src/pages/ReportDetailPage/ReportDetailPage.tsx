@@ -42,7 +42,7 @@ const ReportDetailPage = () => {
       markAsViewedMutation.mutate(reportId);
       markedAsViewedRef.current = reportId;
     }
-    
+
     if (reportId && addedViewerRef.current !== reportId) {
       addViewerMutation.mutate(reportId);
       addedViewerRef.current = reportId;
@@ -91,14 +91,14 @@ const ReportDetailPage = () => {
 
   return (
     <AnimatedPage animationType="slide-up">
-      <div className="flex flex-col bg-[#414346]/20 h-full w-full max-w-[600px] h-[100dvh] mx-auto font-inter overflow-hidden">
+      <div className="flex flex-col bg-[#414346]/20  w-full max-w-[600px] h-[100dvh] mx-auto font-inter overflow-hidden">
         <div className="flex-1 bg-white rounded-t-[32px] flex flex-col overflow-hidden">
-          <PageHeader 
-            title={title} 
-            onBack={() => navigate(-1)} 
-            variant="default" 
-            centered={true} 
-            showBorder={false} 
+          <PageHeader
+            title={title}
+            onBack={() => navigate(-1)}
+            variant="default"
+            centered={true}
+            showBorder={false}
             showHandle={true}
           />
 

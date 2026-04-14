@@ -40,12 +40,7 @@ export default defineConfig({
   server: {
     port: 5173,
     host: true,
-    allowedHosts: [
-      '85f3-43-242-103-85.ngrok-free.app',
-    ],
-    headers: {
-      'ngrok-skip-browser-warning': 'true'
-    },
+    allowedHosts: true,
     proxy: {
       '/api/v1': {
         target: 'https://ideagram.ideamakr.com/backend/api/v1/',
@@ -57,12 +52,7 @@ export default defineConfig({
   preview: {
     port: 4173,
     host: true,
-    allowedHosts: [
-      '85f3-43-242-103-85.ngrok-free.app',
-    ],
-    headers: {
-      'ngrok-skip-browser-warning': 'true'
-    },
+    allowedHosts: true,
     proxy: {
       '/api/v1': {
         target: 'https://ideagram.ideamakr.com/backend/api/v1/',

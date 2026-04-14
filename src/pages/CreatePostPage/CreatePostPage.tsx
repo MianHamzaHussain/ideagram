@@ -219,7 +219,6 @@ const CreatePostPage = () => {
 
       // 3. Explicit Publish Phase (Important: Backend creates all reports as drafts)
       if (!values.draft) {
-        console.log(`[Publishing Phase] Activating report ${reportId}`);
         await reportApi.publish(reportId!);
       }
 

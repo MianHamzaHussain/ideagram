@@ -40,7 +40,6 @@ const PasswordChangeSheet = ({ isOpen, onClose }: PasswordChangeSheetProps) => {
         initialValues={{ currentPassword: '', newPassword1: '', newPassword2: '' }}
         validationSchema={ChangePasswordSchema}
         onSubmit={(values) => {
-          console.log('PasswordChangeSheet: Submitting form', values);
           changePasswordMutation.mutate({
             oldPassword: values.currentPassword,
             newPassword1: values.newPassword1,
@@ -75,7 +74,6 @@ const PasswordChangeSheet = ({ isOpen, onClose }: PasswordChangeSheetProps) => {
                   type="submit"
                   disabled={changePasswordMutation.isPending}
                   onClick={() => {
-                    console.log('Save button clicked manually');
                     if (!isValid) {
                       const firstError = Object.values(errors)[0];
                       if (firstError) {

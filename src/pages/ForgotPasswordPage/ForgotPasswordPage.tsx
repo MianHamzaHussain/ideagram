@@ -30,8 +30,7 @@ const ForgotPasswordPage = () => {
           <Formik
             initialValues={{ email: '' }}
             validationSchema={ForgotPasswordSchema}
-            onSubmit={(values) => {
-              console.log('Reset password for:', values.email);
+            onSubmit={() => {
             }}
           >
             {({ isSubmitting }) => (
@@ -57,7 +56,7 @@ const ForgotPasswordPage = () => {
               onClick={() => navigate('/login')}
               className="text-center text-primary-300 font-bold text-[16px] cursor-pointer no-underline bg-transparent border-none hover:underline transition-colors"
             >
-              return
+              Return
             </button>
           </div>
         </div>

@@ -65,7 +65,11 @@ const FiltersModal = ({ isOpen, onClose, onApply, initialFilters }: FiltersModal
     const groups: Record<string, Tag[]> = {};
     if (!selectedType) return groups;
 
-    tags.forEach((tag) => {
+    const filteredTags = selectedType === 'trouble' 
+      ? tags.filter(tag => tag.tagTypeName !== 'Current state' && tag.tagTypeName !== 'Change since last report')
+      : tags;
+
+    filteredTags.forEach((tag) => {
       if (!groups[tag.tagTypeName]) {
         groups[tag.tagTypeName] = [];
       }
@@ -241,7 +245,7 @@ const FiltersModal = ({ isOpen, onClose, onApply, initialFilters }: FiltersModal
             <Button
               variant="primary"
               onClick={handleSearch}
-              className="flex-[1.5] !h-14 shadow-lg"
+              className="flex-1 !h-14 shadow-lg"
             >
               Search
             </Button>

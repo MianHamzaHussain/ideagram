@@ -33,7 +33,7 @@ export const projectApi = {
     before_id?: number;
     page_size?: number;
     keyword?: string;
-  }): Promise<InfiniteProjectResponse> => {
+  }): Promise<ProjectListResponse> => {
     const queryParams = new URLSearchParams({
       pag_type: params.pag_type,
     });
@@ -51,7 +51,7 @@ export const projectApi = {
       queryParams.append('search_type', 'mobile');
     }
 
-    return apiClient.get<InfiniteProjectResponse>(`project/?${queryParams.toString()}`);
+    return apiClient.get<ProjectListResponse>(`project/?${queryParams.toString()}`);
   },
 };
 

@@ -2,21 +2,21 @@ import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
 import { lazy } from 'react'
 
 // Layouts (Keep eager for better root consistency)
-import MainLayout from './layouts/MainLayout/MainLayout'
-import AuthLayout from './layouts/AuthLayout/AuthLayout'
+import MainLayout from '@/layouts/MainLayout/MainLayout'
+import AuthLayout from '@/layouts/AuthLayout/AuthLayout'
 
 // Pages (Lazy Loaded)
-const LoginPage = lazy(() => import('./pages/LoginPage/LoginPage'))
-const ForgotPasswordPage = lazy(() => import('./pages/ForgotPasswordPage/ForgotPasswordPage'))
-const ProfilePage = lazy(() => import('./pages/ProfilePage/ProfilePage'))
-const HomePage = lazy(() => import('./pages/HomePage/HomePage'))
-const ReportDetailPage = lazy(() => import('./pages/ReportDetailPage/ReportDetailPage'))
-const CreatePostPage = lazy(() => import('./pages/CreatePostPage/CreatePostPage'))
-const SearchPage = lazy(() => import('./pages/SearchPage/SearchPage'))
-const NotificationsPage = lazy(() => import('./pages/NotificationsPage/NotificationsPage'))
+const LoginPage = lazy(() => import('@/pages/LoginPage/LoginPage'))
+const ForgotPasswordPage = lazy(() => import('@/pages/ForgotPasswordPage/ForgotPasswordPage'))
+const ProfilePage = lazy(() => import('@/pages/ProfilePage/ProfilePage'))
+const HomePage = lazy(() => import('@/pages/HomePage/HomePage'))
+const ReportDetailPage = lazy(() => import('@/pages/ReportDetailPage/ReportDetailPage'))
+const CreatePostPage = lazy(() => import('@/pages/CreatePostPage/CreatePostPage'))
+const SearchPage = lazy(() => import('@/pages/SearchPage/SearchPage'))
+const NotificationsPage = lazy(() => import('@/pages/NotificationsPage/NotificationsPage'))
 
-import ProtectedRoute from './components/auth/ProtectedRoute'
-import PublicRoute from './components/auth/PublicRoute'
+import ProtectedRoute from '@/components/auth/ProtectedRoute'
+import PublicRoute from '@/components/auth/PublicRoute'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -82,8 +82,8 @@ const router = createBrowserRouter([
 ])
 
 import { Suspense } from 'react'
-import SplashScreen from './pages/SplashScreen/SplashScreen'
-import PWAInstallPrompt from './components/PWAInstallPrompt/PWAInstallPrompt'
+import SplashScreen from '@/pages/SplashScreen/SplashScreen'
+import PWAInstallPrompt from '@/components/PWAInstallPrompt/PWAInstallPrompt'
 
 function App() {
   return (

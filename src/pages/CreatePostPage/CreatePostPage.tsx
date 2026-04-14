@@ -1,14 +1,12 @@
 import { useState } from 'react';
 import { Formik, Form, type FormikHelpers } from 'formik';
 import * as Yup from 'yup';
-import PageHeader from '../../components/PageHeader/PageHeader';
-import StepIndicator from '../../components/StepIndicator/StepIndicator';
+import { PageHeader, StepIndicator, AnimatedPage } from '@/components';
 import { useNavigate } from 'react-router-dom';
-import { reportApi } from '../../api/report';
+import { reportApi } from '@/api';
 import { toast } from 'react-toastify';
 import { motion, AnimatePresence } from 'framer-motion';
-import AnimatedPage from '../../components/AnimatedPage/AnimatedPage';
-import { getErrorMessage } from '../../utils/errorUtils';
+import { getErrorMessage } from '@/utils';
 
 // Steps
 import StepType from './steps/StepType';

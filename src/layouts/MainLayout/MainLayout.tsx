@@ -1,8 +1,8 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import { Suspense } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import SplashScreen from '../../pages/SplashScreen/SplashScreen';
-import ScrollToTop from '../../components/ScrollToTop/ScrollToTop';
+import SplashScreen from '@/pages/SplashScreen/SplashScreen';
+import { ScrollToTop } from '@/components';
 
 const MainLayout = () => {
   const location = useLocation();

@@ -2,10 +2,9 @@ import { motion, useInView } from 'framer-motion';
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MessageSquare, FileText } from 'react-feather';
-import { useInfiniteNotifications } from '../../hooks/useNotifications';
-import PageHeader from '../../components/PageHeader/PageHeader';
-import AnimatedPage from '../../components/AnimatedPage/AnimatedPage';
-import type { Notification } from '../../api/notification';
+import { useInfiniteNotifications } from '@/hooks';
+import { PageHeader, AnimatedPage } from '@/components';
+import type { Notification } from '@/api';
 
 const NotificationsPage = () => {
   const navigate = useNavigate();

@@ -1,11 +1,9 @@
 import { Formik, type FormikHelpers } from 'formik';
 import * as Yup from 'yup';
-import BottomSheet from '../BottomSheet/BottomSheet';
-import PageHeader from '../PageHeader/PageHeader';
-import TextField from '../TextField/TextField';
-import { useCreateComment, useUpdateComment } from '../../hooks/useComments';
+import { BottomSheet, PageHeader, TextField } from '@/components';
+import { useCreateComment, useUpdateComment } from '@/hooks';
 import { toast } from 'react-toastify';
-import { getErrorMessage } from '../../utils/errorUtils';
+import { getErrorMessage } from '@/utils';
 
 interface CommentFormModalProps {
   isOpen: boolean;

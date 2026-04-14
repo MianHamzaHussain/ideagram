@@ -1,11 +1,9 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { User, PhoneCall } from 'react-feather';
-import { CustomChatIcon } from '../Icons/CustomIcons';
-import ImageCarousel from '../ImageCarousel/ImageCarousel';
+import { CustomChatIcon } from '@/components/Icons/CustomIcons';
+import { ImageCarousel, CarouselIndicators, StatusPill } from '@/components';
 import { Link } from 'react-router-dom';
-import CarouselIndicators from '../CarouselIndicators/CarouselIndicators';
-import StatusPill from '../StatusPill/StatusPill';
 
 interface ReportCardProps {
   id: number;

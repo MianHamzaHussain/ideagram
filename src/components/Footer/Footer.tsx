@@ -1,6 +1,6 @@
 import { Home, PlusCircle, Bell, User } from 'react-feather';
 import { NavLink } from 'react-router-dom';
-import { useUnviewedCount } from '../../hooks/useUnviewedCount';
+import { useUnviewedCount } from '@/hooks';
 
 const Footer = () => {
   const { data: countData } = useUnviewedCount();

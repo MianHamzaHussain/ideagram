@@ -1,9 +1,7 @@
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
-import TextField from '../../components/TextField/TextField';
-import Button from '../../components/Button/Button';
-import AnimatedPage from '../../components/AnimatedPage/AnimatedPage';
+import { TextField, Button, AnimatedPage } from '@/components';
 const ForgotPasswordSchema = Yup.object().shape({
   email: Yup.string()
     .email('Invalid email')

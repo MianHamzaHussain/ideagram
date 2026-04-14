@@ -1,4 +1,4 @@
-import type { Report } from '../api/report';
+import type { Report } from '@/api';
 
 export interface ReportCardProps {
   id: number;

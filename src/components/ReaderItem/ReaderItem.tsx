@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
-import type { Viewer } from '../../api/report';
-import { getInitials } from '../../utils/stringUtils';
+import type { Viewer } from '@/api';
+import { getInitials } from '@/utils';
 
 interface ReaderItemProps {
   viewer: Viewer;

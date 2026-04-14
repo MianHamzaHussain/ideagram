@@ -1,23 +1,27 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
-import ImageCarousel from '../../components/ImageCarousel/ImageCarousel';
-import CommentsModal from '../../components/CommentsModal/CommentsModal';
-import PageHeader from '../../components/PageHeader/PageHeader';
-import DetailItem from '../../components/DetailItem/DetailItem';
-import StatusPill from '../../components/StatusPill/StatusPill';
-import CarouselIndicators from '../../components/CarouselIndicators/CarouselIndicators';
-import ReadersModal from '../../components/ReadersModal/ReadersModal';
-import { useReportDetails } from '../../hooks/useReportDetails';
-import { useInfiniteComments } from '../../hooks/useComments';
-import { useNotifiedUsers } from '../../hooks/useNotifiedUsers';
-import { useMarkAsViewed } from '../../hooks/useMarkAsViewed';
-import { useInfiniteViewers } from '../../hooks/useViewers';
-import { useAddViewer } from '../../hooks/useAddViewer';
-import CommentItem from '../../components/CommentItem/CommentItem';
-import ReaderItem from '../../components/ReaderItem/ReaderItem';
-import { getInitials } from '../../utils/stringUtils';
+import {
+  ImageCarousel,
+  CommentsModal,
+  PageHeader,
+  DetailItem,
+  StatusPill,
+  CarouselIndicators,
+  ReadersModal,
+  CommentItem,
+  ReaderItem,
+  AnimatedPage
+} from '@/components';
+import {
+  useReportDetails,
+  useInfiniteComments,
+  useNotifiedUsers,
+  useMarkAsViewed,
+  useInfiniteViewers,
+  useAddViewer
+} from '@/hooks';
+import { getInitials } from '@/utils';
 import { motion } from 'framer-motion';
-import AnimatedPage from '../../components/AnimatedPage/AnimatedPage';
 
 const ReportDetailPage = () => {
   const { id } = useParams();

@@ -1,12 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
 import { Edit2, Trash2 } from 'react-feather';
-import { useAuthStore } from '../../store/useAuthStore';
-import { useDeleteComment } from '../../hooks/useComments';
+import { useAuthStore } from '@/store';
+import { useDeleteComment } from '@/hooks';
 import ConfirmModal from '../Modal/ConfirmModal';
 import CommentFormModal from '../CommentForm/CommentFormModal';
 import { toast } from 'react-toastify';
-import type { Comment } from '../../api/comment';
-import { getInitials } from '../../utils/stringUtils';
+import type { Comment } from '@/api';
+import { getInitials } from '@/utils';
 
 interface CommentItemProps {
   comment: Comment;

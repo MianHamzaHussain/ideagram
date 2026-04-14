@@ -1,16 +1,16 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useInfiniteReports } from '../../hooks/useReports';
-import { useInfiniteProjects } from '../../hooks/useInfiniteProjects';
-import { useDebounce } from '../../hooks/useDebounce';
-import { mapReportToCardProps } from '../../utils/reportMapper';
-import ReportCard from '../../components/ReportCard/ReportCard';
-import SearchProjectCard from '../../components/SearchProjectCard/SearchProjectCard';
-import InfiniteScrollSentinel from '../../components/InfiniteScrollSentinel/InfiniteScrollSentinel';
+import { useInfiniteReports, useInfiniteProjects, useDebounce } from '@/hooks';
+import { mapReportToCardProps } from '@/utils';
+import {
+  ReportCard,
+  SearchProjectCard,
+  InfiniteScrollSentinel,
+  SelectablePill,
+  PageHeader,
+  AnimatedPage
+} from '@/components';
 import { Search as SearchIcon, X } from 'react-feather';
-import SelectablePill from '../../components/SelectablePill/SelectablePill';
-import PageHeader from '../../components/PageHeader/PageHeader';
-import AnimatedPage from '../../components/AnimatedPage/AnimatedPage';
 import { motion, AnimatePresence } from 'framer-motion';
 
 type SearchCategory = 'progress' | 'trouble' | 'project';

@@ -1,12 +1,14 @@
 import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import BottomSheet from '../BottomSheet/BottomSheet';
-import PageHeader from '../PageHeader/PageHeader';
-import SelectionGroup from '../SelectionGroup/SelectionGroup';
-import SelectablePill from '../SelectablePill/SelectablePill';
-import Button from '../Button/Button';
-import { useTags } from '../../hooks/useTags';
-import type { Tag } from '../../api/tag';
+import {
+  BottomSheet,
+  PageHeader,
+  SelectionGroup,
+  SelectablePill,
+  Button
+} from '@/components';
+import { useTags } from '@/hooks';
+import type { Tag } from '@/api';
 
 interface FiltersModalProps {
   isOpen: boolean;

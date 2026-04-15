@@ -239,7 +239,7 @@ const FiltersModal = ({ isOpen, onClose, onApply, initialFilters }: FiltersModal
         </div>
 
         <div className="flex-none px-6 py-4 border-t border-neutral-100 bg-white pb-[env(safe-area-inset-bottom,20px)]">
-          <div className="flex gap-4">
+          <div className="flex gap-4 mb-2">
             <Button
               variant="brand-outline"
               onClick={handleReset}

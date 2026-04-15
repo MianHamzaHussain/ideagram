@@ -22,7 +22,7 @@ const Button = ({
     secondary: 'bg-neutral-50 text-neutral-900 hover:bg-neutral-100 border-none',
     outline: 'border border-primary-300 text-primary-300 hover:bg-primary-50',
     navy: 'bg-[#004777] text-white hover:bg-[#00365a] border-none',
-    'brand-outline': '!h-[40px] border border-border-brand text-border-brand bg-transparent hover:bg-primary-50 rounded-md py-2 px-4 shadow-sm font-inter text-sm font-semibold',
+    'brand-outline': 'border border-border-brand text-border-brand bg-transparent hover:bg-primary-50 shadow-sm',
     destructive: 'bg-destructive text-white hover:opacity-90 border-none',
   };
 

@@ -9,13 +9,17 @@ import {
   SelectablePill,
   PageHeader,
   AnimatedPage,
-  PageMeta
+  PageMeta,
+  ReportSkeleton,
+  ProjectSkeleton
 } from '@/components';
 import { Search as SearchIcon, X } from 'react-feather';
 import { motion, AnimatePresence } from 'framer-motion';
 import { listContainerVariants, listItemVariants } from '@/config/animations';
 
 type SearchCategory = 'progress' | 'trouble' | 'project';
+
+
 
 
 
@@ -130,38 +134,50 @@ const SearchPage = () => {
                 >
                   {isReportSearch ? (
                     <div className="space-y-4">
-                      {reports.map((report) => (
-                        <motion.div key={report.id} variants={listItemVariants}>
-                          <ReportCard {...mapReportToCardProps(report)} />
-                        </motion.div>
-                      ))}
+                      {isReportsLoading && reports.length === 0 ? (
+                        <ReportSkeleton />
+                      ) : (
+                        <>
+                          {reports.map((report) => (
+                            <motion.div key={report.id} variants={listItemVariants}>
+                              <ReportCard {...mapReportToCardProps(report)} />
+                            </motion.div>
+                          ))}
 
-                      <InfiniteScrollSentinel
-                        hasNextPage={hasNextPageReports}
-                        onIntersect={fetchNextPageReports}
-                        isLoading={isReportsLoading || isFetchingExtraReports}
-                      />
+                          <InfiniteScrollSentinel
+                            hasNextPage={hasNextPageReports}
+                            onIntersect={fetchNextPageReports}
+                            isLoading={isReportsLoading || isFetchingExtraReports}
+                          />
 
-                      {!isReportsLoading && reports.length === 0 && (
-                        <p className="text-center py-10 text-neutral-400 italic">No reports found.</p>
+                          {!isReportsLoading && reports.length === 0 && (
+                            <p className="text-center py-10 text-neutral-400 italic">No reports found.</p>
+                          )}
+                        </>
                       )}
                     </div>
                   ) : (
-                    <div className="grid grid-cols-1 gap-4 pb-6">
-                      {projects.map((project) => (
-                        <motion.div key={project.id} variants={listItemVariants}>
-                          <SearchProjectCard project={project} />
-                        </motion.div>
-                      ))}
+                    <div className="space-y-4 pb-6">
+                      {isProjectsLoading && projects.length === 0 ? (
+                        <ProjectSkeleton />
+                      ) : (
+                        <>
+                          {projects.map((project) => (
+                            <motion.div key={project.id} variants={listItemVariants}>
+                              <SearchProjectCard project={project} />
+                            </motion.div>
+                          ))}
 
-                      <InfiniteScrollSentinel
-                        hasNextPage={hasNextPageProjects}
-                        onIntersect={fetchNextPageProjects}
-                        isLoading={isProjectsLoading || isFetchingExtraProjects}
-                      />
+                          <InfiniteScrollSentinel
+                            hasNextPage={hasNextPageProjects}
+                            onIntersect={fetchNextPageProjects}
+                            isLoading={isProjectsLoading || isFetchingExtraProjects}
+                          />
 
-                      {!isReportsLoading && reports.length === 0 && projects.length === 0 && (
-                        <p className="text-center py-10 text-neutral-400 italic">No projects found.</p>
+                          {!isProjectsLoading && projects.length === 0 && (
+                            <p className="text-center py-10 text-neutral-400 italic">No projects found.</p>
+                          )}
+                        </>
                       )}
                     </div>
                   )}

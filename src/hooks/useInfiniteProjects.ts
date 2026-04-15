@@ -6,19 +6,21 @@ export const useInfiniteProjects = (keyword?: string) => {
     queryKey: ['projects', 'infinite', keyword],
     queryFn: ({ pageParam }) =>
       projectApi.list({
-        pag_type: 'mobile',
-        before_id: pageParam as number,
+        pag_type: 'standard',
+        page: pageParam as number,
         page_size: 10,
         keyword,
       }),
-    initialPageParam: undefined,
+    initialPageParam: 1,
     getNextPageParam: (lastPage) => {
-      // Extract results and find the ID of the last item for pagination
-      const results = lastPage?.results || [];
-      if (results.length === 0) return undefined;
+      if (!lastPage.next) return undefined;
       
-      const lastProject = results[results.length - 1];
-      return lastProject?.id;
+      // If the backend returns the current page number, we can just increment it
+      // StandardPagination in backend returns response.data["page"]
+      const currentPage = lastPage.page || 1;
+      const totalPages = lastPage.total_pages || 1;
+      
+      return currentPage < totalPages ? currentPage + 1 : undefined;
     },
   });
 };

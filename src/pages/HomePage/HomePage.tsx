@@ -7,7 +7,8 @@ import {
   InfiniteScrollSentinel,
   FiltersModal,
   AnimatedPage,
-  PageMeta
+  PageMeta,
+  ReportSkeleton
 } from '@/components';
 import { useInfiniteReports } from '@/hooks';
 import { mapReportToCardProps } from '@/utils';
@@ -64,11 +65,7 @@ const HomePage = () => {
         {/* Scrollable Content Area */}
         <main className="flex-1 flex flex-col overflow-y-auto px-4 py-4 scroll-smooth scrollbar-hide">
           {isLoading && reports.length === 0 ? (
-            <div className="flex flex-col gap-4">
-              {[1, 2, 3].map((n) => (
-                <div key={n} className="w-full h-[300px] bg-neutral-100 animate-pulse rounded-xl" />
-              ))}
-            </div>
+            <ReportSkeleton count={3} />
           ) : isError ? (
             <div className="flex-1 flex flex-col items-center justify-center text-neutral-500">
               <p>Failed to load reports</p>

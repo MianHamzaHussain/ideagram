@@ -1,4 +1,4 @@
-import type { Tag } from '../api/tag';
+import type { Tag } from '@/api/tag';
 
 /**
  * Encodes a flat list of tags into the backend-required Base64 JSON map format.

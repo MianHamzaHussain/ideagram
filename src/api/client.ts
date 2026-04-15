@@ -8,27 +8,33 @@ export const axiosInstance = axios.create({
 });
 
 
+// Combined Request Interceptor: Content-Type + Auth
 axiosInstance.interceptors.request.use(
-  (config) => {
+  (config: InternalAxiosRequestConfig) => {
+    // 1. Content-Type handling
     const isFormData = config.data instanceof FormData ||
       (config.data && typeof config.data.append === 'function');
 
     if (isFormData) {
-      // Rigorously remove Content-Type to let the browser handle the boundary
       delete config.headers['Content-Type'];
       if (config.headers.delete) {
         config.headers.delete('Content-Type');
         config.headers.delete('content-type');
       }
     } else if (config.data && !config.headers['Content-Type'] && !config.headers['content-type']) {
-      // Default to JSON for standard objects if not already set
       config.headers['Content-Type'] = 'application/json';
     }
+
+    // 2. Auth token injection
+    const { accessToken } = useAuthStore.getState();
+    if (accessToken && config.headers) {
+      config.headers.Authorization = `JWT ${accessToken}`;
+    }
+
     return config;
   },
   (error) => Promise.reject(error)
 );
-
 
 // Flag to prevent multiple refresh calls
 let isRefreshing = false;
@@ -47,18 +53,6 @@ const processQueue = (error: unknown, token: string | null = null) => {
   });
   failedQueue = [];
 };
-
-// Request Interceptor
-axiosInstance.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
-    const { accessToken } = useAuthStore.getState();
-    if (accessToken && config.headers) {
-      config.headers.Authorization = `JWT ${accessToken}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
 
 // Response Interceptor
 axiosInstance.interceptors.response.use(

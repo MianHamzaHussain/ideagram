@@ -1,5 +1,6 @@
 import { useQuery, useQueryClient, type InfiniteData } from '@tanstack/react-query';
-import { reportApi, type Report, type InfiniteReportResponse } from '../api/report';
+import { reportApi, type Report, type InfiniteReportResponse } from '@/api/report';
+import { STALE_TIME } from '@/config/queryConfig';
 
 export const useReportDetails = (id: number) => {
   const queryClient = useQueryClient();
@@ -15,7 +16,7 @@ export const useReportDetails = (id: number) => {
         queryKey: ['reports'] 
       });
 
-      for (const [_, data] of allInfiniteData) {
+      for (const [, data] of allInfiniteData) {
         if (!data) continue;
         // Search through pages for the specific report ID
         for (const page of data.pages) {
@@ -28,6 +29,6 @@ export const useReportDetails = (id: number) => {
       return undefined;
     },
     // Prevent immediate refetching if we already have it in the details cache
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: STALE_TIME.DEFAULT,
   });
 };

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Edit2 } from 'react-feather';
@@ -20,7 +20,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import PasswordChangeSheet from './PasswordChangeSheet';
 import { useMediaManager } from '@/hooks';
 import { toast } from 'react-toastify';
-import { getErrorMessage } from '@/utils';
+import { getErrorMessage, dataUrlToFile } from '@/utils';
 
 const ProfileSchema = Yup.object().shape({
   name: Yup.string().required('Name is required'),
@@ -37,17 +37,7 @@ const ProfileSchema = Yup.object().shape({
 });
 
 
-const dataURLtoFile = (dataurl: string, filename: string): File => {
-  const arr = dataurl.split(',');
-  const mime = arr[0].match(/:(.*?);/)?.[1] || 'image/png';
-  const bstr = atob(arr[1]);
-  let n = bstr.length;
-  const u8arr = new Uint8Array(n);
-  while (n--) {
-    u8arr[n] = bstr.charCodeAt(n);
-  }
-  return new File([u8arr], filename, { type: mime });
-};
+
 
 const ProfilePage = () => {
   const navigate = useNavigate();
@@ -60,6 +50,8 @@ const ProfilePage = () => {
   const [initialPhoto, setInitialPhoto] = useState<string | null>(null);
   const [tempPhoto, setTempPhoto] = useState<string | null>(null);
   const [pendingAction, setPendingAction] = useState<(() => void) | null>(null);
+  const [prevProfilePhoto, setPrevProfilePhoto] = useState<string | null>(null);
+
   const logout = useAuthStore((state) => state.logout);
   const user = useAuthStore((state) => state.user);
   const updateUser = useAuthStore((state) => state.updateUser);
@@ -168,12 +160,14 @@ const ProfilePage = () => {
 
   const u = profile?.user;
 
-  useEffect(() => {
-    if (u?.profile?.profilePhoto) {
-      setCurrentPhoto(u.profile.profilePhoto);
-      setInitialPhoto(u.profile.profilePhoto);
-    }
-  }, [u?.profile?.profilePhoto]);
+  // Sync internal state with server data during render to avoid cascading renders (cascading effect)
+  // Only trigger this when user data is actually loaded to avoid infinite loops during loading
+  if (u && u.profile?.profilePhoto !== prevProfilePhoto) {
+    setPrevProfilePhoto(u.profile?.profilePhoto || null);
+    // Sync local photography state with the fresh server data
+    setCurrentPhoto(u.profile?.profilePhoto || null);
+    setInitialPhoto(u.profile?.profilePhoto || null);
+  }
 
   if (isProfileLoading) {
     return (
@@ -224,7 +218,7 @@ const ProfilePage = () => {
             // If photo changed and is a base64 string, convert to File
             if (currentPhoto && currentPhoto.startsWith('data:') && currentPhoto !== initialPhoto) {
               try {
-                payload.profilePhoto = dataURLtoFile(currentPhoto, 'profile_photo.png');
+                payload.profilePhoto = dataUrlToFile(currentPhoto, 'profile_photo.png');
               } catch (e) {
                 console.error('Failed to convert photo:', e);
               }

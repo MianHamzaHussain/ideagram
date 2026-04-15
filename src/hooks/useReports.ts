@@ -1,5 +1,6 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { reportApi, type InfiniteReportResponse } from '../api/report';
+import { reportApi, type InfiniteReportResponse } from '@/api/report';
+import { PAGE_SIZE } from '@/config/queryConfig';
 
 export interface UseReportsParams {
   reportType?: 'progress' | 'trouble';
@@ -16,7 +17,7 @@ export const useInfiniteReports = (params: UseReportsParams = {}) => {
         pag_type: 'mobile',
         before_id: pageParam as number,
         report_type: params.reportType,
-        page_size: 10,
+        page_size: PAGE_SIZE.FEED,
         keyword: params.keyword,
         project_id: params.projectId,
         tags: params.tags,

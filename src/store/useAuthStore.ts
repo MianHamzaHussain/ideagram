@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { User } from '../api/auth';
+import type { User } from '@/api/auth';
 
 interface AuthState {
   user: User | null;
@@ -26,7 +26,6 @@ export const useAuthStore = create<AuthState>()(
         set({ accessToken, refreshToken }),
       logout: () => {
         set({ user: null, accessToken: null, refreshToken: null, isAuthenticated: false });
-        localStorage.removeItem('auth-storage');
       },
       updateUser: (updatedUser) =>
         set((state) => ({

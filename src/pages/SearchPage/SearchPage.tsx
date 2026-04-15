@@ -13,23 +13,11 @@ import {
 } from '@/components';
 import { Search as SearchIcon, X } from 'react-feather';
 import { motion, AnimatePresence } from 'framer-motion';
+import { listContainerVariants, listItemVariants } from '@/config/animations';
 
 type SearchCategory = 'progress' | 'trouble' | 'project';
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.05,
-    },
-  },
-};
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 10 },
-  show: { opacity: 1, y: 0 },
-};
 
 const SearchPage = () => {
   const navigate = useNavigate();
@@ -65,7 +53,7 @@ const SearchPage = () => {
   return (
     <AnimatedPage animationType="slide-up">
       <PageMeta title="Search" description="Search for specific project reports or projects." />
-      <div className="flex flex-col bg-[#414346]/20 h-full w-full max-w-[600px] h-[100dvh] mx-auto font-inter overflow-hidden">
+      <div className="flex flex-col bg-[#414346]/20 w-full max-w-[600px] h-[100dvh] mx-auto font-inter overflow-hidden">
         <div className="flex-1 bg-white rounded-t-[32px] flex flex-col overflow-hidden">
           <PageHeader
             title=""
@@ -136,14 +124,14 @@ const SearchPage = () => {
               <AnimatePresence mode="wait">
                 <motion.div
                   key={`${activeCategory}-${debouncedKeyword}`}
-                  variants={containerVariants}
+                  variants={listContainerVariants}
                   initial="hidden"
                   animate="show"
                 >
                   {isReportSearch ? (
                     <div className="space-y-4">
                       {reports.map((report) => (
-                        <motion.div key={report.id} variants={itemVariants}>
+                        <motion.div key={report.id} variants={listItemVariants}>
                           <ReportCard {...mapReportToCardProps(report)} />
                         </motion.div>
                       ))}
@@ -161,7 +149,7 @@ const SearchPage = () => {
                   ) : (
                     <div className="grid grid-cols-1 gap-4 pb-6">
                       {projects.map((project) => (
-                        <motion.div key={project.id} variants={itemVariants}>
+                        <motion.div key={project.id} variants={listItemVariants}>
                           <SearchProjectCard project={project} />
                         </motion.div>
                       ))}

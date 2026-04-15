@@ -1,12 +1,9 @@
 import { useEffect, useMemo } from 'react';
 import { useFormikContext } from 'formik';
-import SelectionGroup from '../../../components/SelectionGroup/SelectionGroup';
-import SelectablePill from '../../../components/SelectablePill/SelectablePill';
-import SelectField from '../../../components/SelectField/SelectField';
-import { useProjects } from '../../../hooks/useProjects';
-import type { Project } from '../../../api/project';
-import { useTags } from '../../../hooks/useTags';
-import type { Tag } from '../../../api/tag';
+import { SelectionGroup, SelectablePill, SelectField } from '@/components';
+import { useProjects, useTags } from '@/hooks';
+import type { Project } from '@/api/project';
+import type { Tag } from '@/api/tag';
 
 interface CreatePostValues {
   reportType: number;
@@ -21,6 +18,21 @@ const UI_LABEL_MAP: Record<string, string> = {
 };
 
 const SINGLE_SELECT_GROUPS = ['Current state', 'Change since last report'];
+
+const TagGroupSkeleton = () => (
+  <div className="flex flex-col gap-4 animate-pulse px-1">
+    {/* Title Skeleton */}
+    <div className="h-5 bg-neutral-100 rounded-md w-24" />
+    {/* Subtitle Skeleton */}
+    <div className="h-4 bg-neutral-50 rounded-md w-40 mb-1" />
+    {/* 2x2 Grid of Pills Skeleton */}
+    <div className="grid grid-cols-2 gap-3">
+      {[1, 2, 3, 4].map((i) => (
+        <div key={i} className="h-11 bg-neutral-100 rounded-full w-full" />
+      ))}
+    </div>
+  </div>
+);
 
 const StepDetailsContent = () => {
   const { values, setFieldValue } = useFormikContext<CreatePostValues>();
@@ -124,20 +136,6 @@ const StepDetailsContent = () => {
     }
   }, [showDaysToStop, values.daysToStop, setFieldValue]);
 
-  const TagGroupSkeleton = () => (
-    <div className="flex flex-col gap-4 animate-pulse px-1">
-      {/* Title Skeleton */}
-      <div className="h-5 bg-neutral-100 rounded-md w-24" />
-      {/* Subtitle Skeleton */}
-      <div className="h-4 bg-neutral-50 rounded-md w-40 mb-1" />
-      {/* 2x2 Grid of Pills Skeleton */}
-      <div className="grid grid-cols-2 gap-3">
-        {[1, 2, 3, 4].map((i) => (
-          <div key={i} className="h-11 bg-neutral-100 rounded-full w-full" />
-        ))}
-      </div>
-    </div>
-  );
 
   return (
     <div className="flex flex-col gap-8">

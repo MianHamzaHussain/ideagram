@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import {
   Header,
@@ -12,30 +12,17 @@ import {
 import { useInfiniteReports } from '@/hooks';
 import { mapReportToCardProps } from '@/utils';
 import { useFilterStore } from '@/store';
-import Tabs from '@/components/Tabs/Tabs'; // Tabs is a dedicated folder component, can still be aliased
+import Tabs from '@/components/Tabs/Tabs';
+import { feedContainerVariants, feedItemVariants } from '@/config/animations';
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.1,
-    },
-  },
-};
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0 },
-};
 
 /**
  * Modern Industry-Standard PWA Home Page
  * Implements a sticky header/tabs, scrollable content, and fixed footer.
  */
 const HomePage = () => {
-  const { reportType, setReportType, tagIds, tagsMap } = useFilterStore();
+  const { reportType, setReportType, tagIds, tagsMap, keyword, projectId } = useFilterStore();
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
   const {
@@ -47,6 +34,8 @@ const HomePage = () => {
   } = useInfiniteReports({
     reportType,
     tags: tagsMap,
+    keyword: keyword || undefined,
+    projectId,
   });
 
   const reports = data?.pages.flat() || [];
@@ -87,13 +76,13 @@ const HomePage = () => {
             </div>
           ) : reports.length > 0 ? (
             <motion.div
-              variants={containerVariants}
+              variants={feedContainerVariants}
               initial="hidden"
               animate="show"
               className="space-y-4"
             >
               {reports.map((report) => (
-                <motion.div key={report.id} variants={itemVariants}>
+                <motion.div key={report.id} variants={feedItemVariants}>
                   <ReportCard {...mapReportToCardProps(report)} />
                 </motion.div>
               ))}
@@ -117,10 +106,10 @@ const HomePage = () => {
           isOpen={isFilterModalOpen}
           onClose={() => setIsFilterModalOpen(false)}
           onApply={handleApplyFilters}
-          initialFilters={{
+          initialFilters={useMemo(() => ({
             reportType: reportType,
             tagIds: tagIds,
-          }}
+          }), [reportType, tagIds])}
         />
       </div>
     </AnimatedPage>

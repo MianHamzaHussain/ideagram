@@ -11,6 +11,7 @@ export interface FilterState {
   setReportType: (type: 'progress' | 'trouble') => void;
   setKeyword: (keyword: string) => void;
   setFilters: (filters: { tagIds: number[]; tagsMap: Record<number, number[]> }) => void;
+  setProjectId: (projectId: number | undefined) => void;
   reset: () => void;
 }
 
@@ -26,6 +27,8 @@ export const useFilterStore = create<FilterState>((set) => ({
   setKeyword: (keyword) => set({ keyword }),
 
   setFilters: ({ tagIds, tagsMap }) => set({ tagIds, tagsMap }),
+
+  setProjectId: (projectId) => set({ projectId }),
 
   reset: () => set({
     reportType: 'progress',

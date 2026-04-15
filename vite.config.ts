@@ -5,6 +5,14 @@ import tailwindcss from '@tailwindcss/vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import checker from 'vite-plugin-checker';
 
+const apiProxy = {
+  '/api/v1': {
+    target: 'https://ideagram.ideamakr.com/backend/api/v1/',
+    changeOrigin: true,
+    rewrite: (path: string) => path.replace(/^\/api\/v1/, ''),
+  }
+};
+
 // https://vite.dev/config/
 export default defineConfig({
   test: {
@@ -77,24 +85,12 @@ export default defineConfig({
     port: 5173,
     host: true,
     allowedHosts: true,
-    proxy: {
-      '/api/v1': {
-        target: 'https://ideagram.ideamakr.com/backend/api/v1/',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api\/v1/, ''),
-      }
-    }
+    proxy: apiProxy,
   },
   preview: {
     port: 4173,
     host: true,
     allowedHosts: true,
-    proxy: {
-      '/api/v1': {
-        target: 'https://ideagram.ideamakr.com/backend/api/v1/',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api\/v1/, ''),
-      }
-    }
+    proxy: apiProxy,
   }
 })

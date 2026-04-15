@@ -1,7 +1,6 @@
 import { useFormikContext } from 'formik';
 import StepLayout from './StepLayout';
-import Button from '../../../components/Button/Button';
-import FormError from '../../../components/FormError/FormError';
+import { Button, FormError } from '@/components';
 import type { CreatePostFormValues } from '../types';
 
 // Reusable Content Sections

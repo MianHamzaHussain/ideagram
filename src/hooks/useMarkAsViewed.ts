@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { reportApi } from '../api/report';
+import { reportApi } from '@/api/report';
 
 export const useMarkAsViewed = () => {
   const queryClient = useQueryClient();

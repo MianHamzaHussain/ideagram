@@ -2,9 +2,9 @@ import { useState, useRef } from 'react';
 import { useFormikContext } from 'formik';
 import MediaButton from './MediaButton';
 import EditMediaModal, { type EditableMedia } from './EditMediaModal';
-import CameraCaptureModal from '../../../components/CameraCaptureModal/CameraCaptureModal';
-import { useMediaManager } from '../../../hooks/useMediaManager';
-import { IS_VIDEO_ENABLED } from '../../../utils/constants';
+import { CameraCaptureModal } from '@/components';
+import { useMediaManager } from '@/hooks';
+import { IS_VIDEO_ENABLED } from '@/utils';
 import type { CreatePostFormValues } from '../types';
 
 const StepMediaContent = () => {

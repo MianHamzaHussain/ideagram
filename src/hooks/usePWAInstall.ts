@@ -6,25 +6,26 @@ import { useState, useEffect } from 'react';
  * Detects platform, standalone mode, and catches the beforeinstallprompt event.
  */
 export const usePWAInstall = () => {
-  const [isIOS, setIsIOS] = useState(false);
-  const [isAndroid, setIsAndroid] = useState(false);
-  const [isStandalone, setIsStandalone] = useState(false);
+  const [isIOS] = useState(() => {
+    const userAgent = typeof window !== 'undefined' ? window.navigator.userAgent.toLowerCase() : '';
+    return /iphone|ipad|ipod/.test(userAgent);
+  });
+  
+  const [isAndroid] = useState(() => {
+    const userAgent = typeof window !== 'undefined' ? window.navigator.userAgent.toLowerCase() : '';
+    return /android/.test(userAgent);
+  });
+
+  const [isStandalone] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    const isIOSStandalone = 'standalone' in window.navigator && (window.navigator as Navigator & { standalone?: boolean }).standalone;
+    const isGenericStandalone = window.matchMedia('(display-mode: standalone)').matches;
+    return !!(isIOSStandalone || isGenericStandalone);
+  });
+
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
 
   useEffect(() => {
-    // Detect iOS and Android
-    const userAgent = window.navigator.userAgent.toLowerCase();
-    const isIOSDevice = /iphone|ipad|ipod/.test(userAgent);
-    const isAndroidDevice = /android/.test(userAgent);
-
-    setIsIOS(isIOSDevice);
-    setIsAndroid(isAndroidDevice);
-
-    // Detect if already installed (standalone mode)
-    const isIOSStandalone = 'standalone' in window.navigator && (window.navigator as Navigator & { standalone?: boolean }).standalone;
-    const isGenericStandalone = window.matchMedia('(display-mode: standalone)').matches;
-    setIsStandalone(!!(isIOSStandalone || isGenericStandalone));
-
     // Android/Chrome beforeinstallprompt event
     const handler = (e: BeforeInstallPromptEvent) => {
       e.preventDefault();

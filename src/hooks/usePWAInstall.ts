@@ -24,6 +24,7 @@ export const usePWAInstall = () => {
   });
 
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [isInstalled, setIsInstalled] = useState(false);
 
   useEffect(() => {
     // Android/Chrome beforeinstallprompt event
@@ -32,7 +33,21 @@ export const usePWAInstall = () => {
       setDeferredPrompt(e as BeforeInstallPromptEvent);
     };
 
+    const checkInstallation = async () => {
+      // Chrome/Android-only API to check if app is already installed
+      if ('getInstalledRelatedApps' in navigator) {
+        try {
+          const relatedApps = await (navigator as any).getInstalledRelatedApps();
+          const installed = relatedApps.find((app: any) => app.platform === 'webapp');
+          setIsInstalled(!!installed);
+        } catch (err) {
+          console.warn('Failed to check PWA installation:', err);
+        }
+      }
+    };
+
     window.addEventListener('beforeinstallprompt', handler);
+    checkInstallation();
 
     return () => window.removeEventListener('beforeinstallprompt', handler);
   }, []);
@@ -43,9 +58,10 @@ export const usePWAInstall = () => {
       const { outcome } = await deferredPrompt.userChoice;
       if (outcome === 'accepted') {
         setDeferredPrompt(null);
+        setIsInstalled(true);
       }
     }
   };
 
-  return { isIOS, isAndroid, isStandalone, deferredPrompt, handleInstall };
+  return { isIOS, isAndroid, isStandalone, isInstalled, deferredPrompt, handleInstall };
 };

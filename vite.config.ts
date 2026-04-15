@@ -45,6 +45,13 @@ export default defineConfig(({ mode }) => {
           theme_color: '#0265DC',
           background_color: '#F2F4F7',
           display: 'standalone',
+          prefer_related_applications: true,
+          related_applications: [
+            {
+              platform: 'webapp',
+              url: 'https://ideamakr.com/manifest.webmanifest',
+            }
+          ],
           icons: [
             {
               src: 'pwa-192x192.png',

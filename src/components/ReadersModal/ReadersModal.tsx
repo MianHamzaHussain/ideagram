@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
-import { motion, AnimatePresence, type Variants } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { listContainerVariants, listItemVariants } from '@/config/animations';
 import { ReaderItem, PageHeader, InfiniteScrollSentinel } from '@/components';
 import { useInfiniteViewers } from '@/hooks';
 
@@ -9,21 +10,7 @@ interface ReadersModalProps {
   reportId: number;
 }
 
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.05,
-      delayChildren: 0.1,
-    },
-  },
-};
 
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 10 },
-  show: { opacity: 1, y: 0 },
-};
 
 const ReadersModal = ({ isOpen, onClose, reportId }: ReadersModalProps) => {
   const {
@@ -106,13 +93,13 @@ const ReadersModal = ({ isOpen, onClose, reportId }: ReadersModalProps) => {
                 </div>
               ) : viewers && viewers.length > 0 ? (
                 <motion.div
-                  variants={containerVariants}
+                  variants={listContainerVariants}
                   initial="hidden"
                   animate="show"
                   className="flex flex-col w-full"
                 >
                   {viewers.map((viewer) => (
-                    <motion.div key={viewer.id} variants={itemVariants}>
+                    <motion.div key={viewer.id} variants={listItemVariants}>
                       <ReaderItem viewer={viewer} />
                     </motion.div>
                   ))}

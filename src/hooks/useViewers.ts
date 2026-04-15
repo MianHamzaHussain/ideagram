@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { reportApi, type Viewer } from '../api/report';
+import { reportApi, type Viewer } from '@/api/report';
 
 export const useInfiniteViewers = (reportId: number) => {
   return useInfiniteQuery<Viewer[]>({

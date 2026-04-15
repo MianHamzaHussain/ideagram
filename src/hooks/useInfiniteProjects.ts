@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { projectApi, type ProjectListResponse } from '../api/project';
+import { projectApi, type ProjectListResponse } from '@/api/project';
 
 export const useInfiniteProjects = (keyword?: string) => {
   return useInfiniteQuery<ProjectListResponse>({

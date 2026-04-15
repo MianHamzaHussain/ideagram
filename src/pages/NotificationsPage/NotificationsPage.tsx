@@ -1,9 +1,9 @@
-import { motion, useInView } from 'framer-motion';
-import { useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { MessageSquare, FileText } from 'react-feather';
 import { useInfiniteNotifications } from '@/hooks';
-import { PageHeader, AnimatedPage, PageMeta } from '@/components';
+import { PageHeader, AnimatedPage, PageMeta, InfiniteScrollSentinel } from '@/components';
+import { formatRelativeTime } from '@/utils';
 import type { Notification } from '@/api';
 
 const NotificationsPage = () => {
@@ -16,15 +16,6 @@ const NotificationsPage = () => {
     isLoading 
   } = useInfiniteNotifications();
 
-  const scrollRef = useRef(null);
-  const isInView = useInView(scrollRef);
-
-  useEffect(() => {
-    if (isInView && hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
-    }
-  }, [isInView, hasNextPage, isFetchingNextPage, fetchNextPage]);
-
   const notifications = data?.pages.flatMap((page) => page) || [];
 
   const handleNotificationClick = (notification: Notification) => {
@@ -34,21 +25,12 @@ const NotificationsPage = () => {
     }
   };
 
-  const formatRelativeTime = (dateString: string) => {
-    const now = new Date();
-    const date = new Date(dateString);
-    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
-    if (diffInSeconds < 60) return 'Just now';
-    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
-    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
-    return `${Math.floor(diffInSeconds / 86400)}d ago`;
-  };
 
   return (
     <AnimatedPage animationType="slide-up">
       <PageMeta title="Notifications" description="View and manage your recent activity and mentions." />
-      <div className="flex flex-col bg-[#414346]/20 h-full w-full max-w-[600px] h-[100dvh] mx-auto font-inter overflow-hidden">
+      <div className="flex flex-col bg-[#414346]/20 w-full max-w-[600px] h-[100dvh] mx-auto font-inter overflow-hidden">
         <div className="flex-1 bg-white rounded-t-[32px] flex flex-col overflow-hidden">
           <PageHeader 
             title="Notifications" 
@@ -120,10 +102,11 @@ const NotificationsPage = () => {
                   </motion.div>
                 ))}
                 
-                {/* Load More Trigger */}
-                <div ref={scrollRef} className="h-10 w-full flex items-center justify-center">
-                  {isFetchingNextPage && <div className="loading-spinner h-6 w-6 border-2 border-primary-300 border-t-transparent rounded-full animate-spin" />}
-                </div>
+                <InfiniteScrollSentinel
+                  hasNextPage={hasNextPage}
+                  onIntersect={fetchNextPage}
+                  isLoading={isFetchingNextPage}
+                />
               </div>
             )}
           </main>

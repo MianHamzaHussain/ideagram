@@ -1,5 +1,5 @@
 import { useInfiniteQuery, useMutation, useQueryClient, type QueryClient } from '@tanstack/react-query';
-import { commentApi, type Comment } from '../api/comment';
+import { commentApi, type Comment } from '@/api/comment';
 
 export const useInfiniteComments = (reportId: number) => {
   return useInfiniteQuery<Comment[]>({

@@ -28,3 +28,6 @@ export { default as StepIndicator } from './StepIndicator/StepIndicator';
 export { default as TextField } from './TextField/TextField';
 export { default as ErrorBoundary } from './ErrorBoundary';
 export { default as PageMeta } from './PageMeta';
+export { default as Tabs } from './Tabs/Tabs';
+export { default as PWAInstallPrompt } from './PWAInstallPrompt/PWAInstallPrompt';
+export { default as CommentFormModal } from './CommentForm/CommentFormModal';

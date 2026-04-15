@@ -1,8 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { X, Edit3, Activity, Square, Circle, Trash2 } from 'react-feather';
-import Button from '../../../components/Button/Button';
-import PageHeader from '../../../components/PageHeader/PageHeader';
-import ConfirmModal from '../../../components/Modal/ConfirmModal';
+import { Button, PageHeader, ConfirmModal } from '@/components';
+import { dataUrlToFile } from '@/utils';
 
 export interface EditableMedia {
   id: string;
@@ -12,17 +11,7 @@ export interface EditableMedia {
   file?: File;
 }
 
-const dataUrlToFile = (dataUrl: string, filename: string): File => {
-  const arr = dataUrl.split(',');
-  const mime = arr[0].match(/:(.*?);/)![1];
-  const bstr = atob(arr[1]);
-  let n = bstr.length;
-  const u8arr = new Uint8Array(n);
-  while (n--) {
-    u8arr[n] = bstr.charCodeAt(n);
-  }
-  return new File([u8arr], filename, { type: mime });
-};
+
 
 interface EditMediaModalProps {
   media: EditableMedia;
@@ -69,7 +58,7 @@ const EditMediaModal = ({ media, onSave, onClose }: EditMediaModalProps) => {
       };
       img.src = previewUrl; 
     }
-  }, [media, view]);
+  }, [media, view, previewUrl]);
 
   const getCoordinates = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (!canvasRef.current) return { x: 0, y: 0 };

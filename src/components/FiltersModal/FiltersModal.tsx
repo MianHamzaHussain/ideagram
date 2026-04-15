@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   BottomSheet,
@@ -50,13 +50,16 @@ const FiltersModal = ({ isOpen, onClose, onApply, initialFilters }: FiltersModal
   const [selectedType, setSelectedType] = useState<'progress' | 'trouble' | undefined>(initialFilters.reportType);
   const [selectedTagIds, setSelectedTagIds] = useState<number[]>(initialFilters.tagIds);
 
-  // Sync with initialFilters when modal opens
-  useEffect(() => {
-    if (isOpen) {
-      setSelectedType(initialFilters.reportType);
-      setSelectedTagIds(initialFilters.tagIds);
-    }
-  }, [isOpen, initialFilters]);
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
+
+  // Sync with initialFilters when modal transitions from closed to open
+  if (isOpen && !prevIsOpen) {
+    setPrevIsOpen(true);
+    setSelectedType(initialFilters.reportType);
+    setSelectedTagIds(initialFilters.tagIds);
+  } else if (!isOpen && prevIsOpen) {
+    setPrevIsOpen(false);
+  }
 
   // Fetch tags based on selected type
   const reportTypeInt = selectedType === 'trouble' ? 1 : selectedType === 'progress' ? 2 : 0;
@@ -67,7 +70,7 @@ const FiltersModal = ({ isOpen, onClose, onApply, initialFilters }: FiltersModal
     const groups: Record<string, Tag[]> = {};
     if (!selectedType) return groups;
 
-    const filteredTags = selectedType === 'trouble' 
+    const filteredTags = selectedType === 'trouble'
       ? tags.filter(tag => tag.tagTypeName !== 'Current state' && tag.tagTypeName !== 'Change since last report')
       : tags;
 
@@ -92,7 +95,7 @@ const FiltersModal = ({ isOpen, onClose, onApply, initialFilters }: FiltersModal
 
   const handleToggleTag = (tag: Tag, groupName: string) => {
     const isSingleSelect = SINGLE_SELECT_GROUPS.includes(groupName);
-    
+
     if (isSingleSelect) {
       // Find other tags in the same group and remove them
       const groupTagIds = groupedTags[groupName].map(t => t.id);
@@ -209,7 +212,7 @@ const FiltersModal = ({ isOpen, onClose, onApply, initialFilters }: FiltersModal
 
                       return (
                         <motion.div key={groupName} variants={itemVariants}>
-                          <SelectionGroup 
+                          <SelectionGroup
                             label={uiLabel}
                             subLabel={isSingleSelect ? `Select a ${uiLabel.toLowerCase()}` : undefined}
                           >

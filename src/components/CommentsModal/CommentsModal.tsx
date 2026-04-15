@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
-import { motion, AnimatePresence, type Variants } from 'framer-motion';
-import CommentItem from '../CommentItem/CommentItem';
-import PageHeader from '../PageHeader/PageHeader';
+import { motion, AnimatePresence } from 'framer-motion';
+import { listContainerVariants, listItemVariants } from '@/config/animations';
+import { CommentItem, PageHeader, InfiniteScrollSentinel, CommentFormModal } from '@/components';
 import { useInfiniteComments } from '@/hooks';
-import InfiniteScrollSentinel from '../InfiniteScrollSentinel/InfiniteScrollSentinel';
-import CommentFormModal from '../CommentForm/CommentFormModal';
 
 interface CommentsModalProps {
   isOpen: boolean;
@@ -12,21 +10,7 @@ interface CommentsModalProps {
   reportId: number;
 }
 
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.05,
-      delayChildren: 0.1,
-    },
-  },
-};
 
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 10 },
-  show: { opacity: 1, y: 0 },
-};
 
 const CommentsModal = ({ isOpen, onClose, reportId }: CommentsModalProps) => {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -118,13 +102,13 @@ const CommentsModal = ({ isOpen, onClose, reportId }: CommentsModalProps) => {
                 </div>
               ) : comments.length > 0 ? (
                 <motion.div
-                  variants={containerVariants}
+                  variants={listContainerVariants}
                   initial="hidden"
                   animate="show"
                   className="flex flex-col w-full"
                 >
                   {comments.map((comment) => (
-                    <motion.div key={comment.id} variants={itemVariants}>
+                    <motion.div key={comment.id} variants={listItemVariants}>
                       <CommentItem comment={comment} reportId={reportId} />
                     </motion.div>
                   ))}

@@ -6,7 +6,7 @@ import ConfirmModal from '../Modal/ConfirmModal';
 import CommentFormModal from '../CommentForm/CommentFormModal';
 import { toast } from 'react-toastify';
 import type { Comment } from '@/api';
-import { getInitials } from '@/utils';
+import { getErrorMessage, getInitials } from '@/utils';
 
 interface CommentItemProps {
   comment: Comment;
@@ -76,7 +76,7 @@ const CommentItem = ({ comment, reportId }: CommentItemProps) => {
       await deleteMutation.mutateAsync(comment.id);
       toast.success('Comment deleted');
     } catch (error) {
-      toast.error('Failed to delete comment');
+      toast.error(getErrorMessage(error, 'Failed to delete comment'));
     } finally {
       setIsConfirmOpen(false);
       resetSwipe();

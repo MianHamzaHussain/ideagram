@@ -21,25 +21,28 @@ const SafariPlusIcon = ({ size = 24, className = "" }: { size?: number; classNam
 
 const PWAInstallPrompt = () => {
   const { isIOS, isAndroid, isStandalone, deferredPrompt, handleInstall } = usePWAInstall();
-  const [showModal, setShowModal] = useState(false);
+  // Best Practice: Initialize modal state based on platform detection immediately
+  const [showModal, setShowModal] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    const isDismissed = sessionStorage.getItem('pwa_modal_dismissed');
+    
+    // iOS shows immediately if conditions are met. 
+    // Android starts as false because it requires a 2s delay handled in useEffect.
+    return !!(!isStandalone && !isDismissed && isIOS);
+  });
+
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
     const isDismissed = sessionStorage.getItem('pwa_modal_dismissed');
+    const shouldShowAndroid = !isStandalone && !isDismissed && isAndroid;
 
-    // Show if not already installed AND not dismissed AND (is iOS OR is Android)
-    const shouldShow = !isStandalone && !isDismissed && (isIOS || isAndroid);
-
-    if (shouldShow) {
-      if (isIOS) {
-        setShowModal(true);
-      } else if (isAndroid) {
-        // Delay Android modal to ensure the beforeinstallprompt event is caught
-        const timer = setTimeout(() => setShowModal(true), 2000);
-        return () => clearTimeout(timer);
-      }
+    // We only need the effect for the Android-specific 2s delay
+    if (shouldShowAndroid && !showModal) {
+      const timer = setTimeout(() => setShowModal(true), 2000);
+      return () => clearTimeout(timer);
     }
-  }, [isIOS, isAndroid, isStandalone]);
+  }, [isAndroid, isStandalone, showModal]);
 
   const handleDismiss = () => {
     setShowModal(false);

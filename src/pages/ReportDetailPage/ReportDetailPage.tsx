@@ -21,7 +21,7 @@ import {
   useInfiniteViewers,
   useAddViewer
 } from '@/hooks';
-import { getInitials } from '@/utils';
+import { getInitials, parseExplanation, categorizeReportTags, mapReportMedia } from '@/utils';
 import { motion } from 'framer-motion';
 
 const ReportDetailPage = () => {
@@ -80,19 +80,9 @@ const ReportDetailPage = () => {
     );
   }
 
-  const parts = report.explanation.split('\n');
-  const title = parts[0] || 'Untitled Report';
-  const description = parts.slice(1).join('\n').trim() || 'No description provided.';
-
-  const statusTag = report.tags.find(t => t.tagType === 2)?.name;
-  const trendTag = report.tags.find(t => t.tagType === 3)?.name;
-  const generalTags = report.tags.filter(t => t.tagType !== 2 && t.tagType !== 3);
-
-  const images = report.media.map(m => ({
-    url: m.mediaType === 'image' ? m.image : m.videoUrl,
-    caption: m.caption,
-    type: m.mediaType
-  }));
+  const { title, description } = parseExplanation(report.explanation);
+  const { statusTag, trendTag, generalTags } = categorizeReportTags(report.tags);
+  const images = mapReportMedia(report.media);
 
   return (
     <AnimatedPage animationType="slide-up">

@@ -1,7 +1,7 @@
 import { useFormikContext } from 'formik';
 import { XCircle } from 'react-feather';
-import { useSimpleUsers } from '../../../hooks/useSimpleUsers';
-import { useAuthStore } from '../../../store/useAuthStore';
+import { useSimpleUsers } from '@/hooks';
+import { useAuthStore } from '@/store';
 
 interface NotificationValues {
   project: string; // The project ID

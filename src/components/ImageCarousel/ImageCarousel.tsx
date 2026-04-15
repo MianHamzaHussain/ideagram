@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 interface CarouselImage {
   url: string;
@@ -24,6 +24,20 @@ const ImageCarousel = ({
   const [activeIndex, setActiveIndex] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  const scrollToIndex = useCallback((index: number) => {
+    if (!scrollRef.current) return;
+
+    const container = scrollRef.current;
+    const itemWidth = 334;
+    const gap = 10;
+
+    container.scrollTo({
+      left: index * (itemWidth + gap),
+      behavior: 'smooth'
+    });
+    setActiveIndex(index);
+  }, []);
+
   // Sync internal activeIndex with prop callback
   useEffect(() => {
     if (onIndexChange) {
@@ -41,21 +55,7 @@ const ImageCarousel = ({
     }, autoPlayInterval);
 
     return () => clearInterval(interval);
-  }, [activeIndex, images.length, autoPlayInterval]);
-
-  const scrollToIndex = (index: number) => {
-    if (!scrollRef.current) return;
-
-    const container = scrollRef.current;
-    const itemWidth = 334;
-    const gap = 10;
-
-    container.scrollTo({
-      left: index * (itemWidth + gap),
-      behavior: 'smooth'
-    });
-    setActiveIndex(index);
-  };
+  }, [activeIndex, images.length, autoPlayInterval, scrollToIndex]);
 
   const handleScroll = () => {
     if (!scrollRef.current) return;

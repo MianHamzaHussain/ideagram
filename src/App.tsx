@@ -1,25 +1,28 @@
-import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
-import { lazy } from 'react'
+import { lazy, Suspense } from 'react';
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-// Layouts (Keep eager for better root consistency)
-import MainLayout from '@/layouts/MainLayout/MainLayout'
-import AuthLayout from '@/layouts/AuthLayout/AuthLayout'
+// Layouts
+import MainLayout from '@/layouts/MainLayout/MainLayout';
+import AuthLayout from '@/layouts/AuthLayout/AuthLayout';
 
-// Pages (Lazy Loaded)
-const LoginPage = lazy(() => import('@/pages/LoginPage/LoginPage'))
-const ForgotPasswordPage = lazy(() => import('@/pages/ForgotPasswordPage/ForgotPasswordPage'))
-const ProfilePage = lazy(() => import('@/pages/ProfilePage/ProfilePage'))
-const HomePage = lazy(() => import('@/pages/HomePage/HomePage'))
-const ReportDetailPage = lazy(() => import('@/pages/ReportDetailPage/ReportDetailPage'))
-const CreatePostPage = lazy(() => import('@/pages/CreatePostPage/CreatePostPage'))
-const SearchPage = lazy(() => import('@/pages/SearchPage/SearchPage'))
-const NotificationsPage = lazy(() => import('@/pages/NotificationsPage/NotificationsPage'))
+// Components
+import ProtectedRoute from '@/components/auth/ProtectedRoute';
+import PublicRoute from '@/components/auth/PublicRoute';
+import { ErrorBoundary, PWAInstallPrompt } from '@/components';
+import { RouteErrorFallback } from '@/components/ErrorBoundary';
+import SplashScreen from '@/pages/SplashScreen/SplashScreen';
 
-import ProtectedRoute from '@/components/auth/ProtectedRoute'
-import PublicRoute from '@/components/auth/PublicRoute'
-import ErrorBoundary, { RouteErrorFallback } from '@/components/ErrorBoundary'
-import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+// Pages
+const LoginPage = lazy(() => import('@/pages/LoginPage/LoginPage'));
+const ForgotPasswordPage = lazy(() => import('@/pages/ForgotPasswordPage/ForgotPasswordPage'));
+const ProfilePage = lazy(() => import('@/pages/ProfilePage/ProfilePage'));
+const HomePage = lazy(() => import('@/pages/HomePage/HomePage'));
+const ReportDetailPage = lazy(() => import('@/pages/ReportDetailPage/ReportDetailPage'));
+const CreatePostPage = lazy(() => import('@/pages/CreatePostPage/CreatePostPage'));
+const SearchPage = lazy(() => import('@/pages/SearchPage/SearchPage'));
+const NotificationsPage = lazy(() => import('@/pages/NotificationsPage/NotificationsPage'));
 
 const router = createBrowserRouter([
   {
@@ -82,11 +85,7 @@ const router = createBrowserRouter([
     path: '*',
     element: <Navigate to="/" replace />,
   },
-])
-
-import { Suspense } from 'react'
-import SplashScreen from '@/pages/SplashScreen/SplashScreen'
-import PWAInstallPrompt from '@/components/PWAInstallPrompt/PWAInstallPrompt'
+]);
 
 function App() {
   return (

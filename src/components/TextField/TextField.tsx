@@ -17,7 +17,7 @@ interface TextFieldProps {
 }
 
 const TextField = ({ label, type = 'text', multiline = false, height, id, onFocus, onBlur, name, ...props }: TextFieldProps) => {
-  const [field, meta] = useField({ name, ...props } as any);
+  const [field, meta] = useField(name);
   const [showPassword, setShowPassword] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
 

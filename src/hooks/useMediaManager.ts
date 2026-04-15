@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { IS_VIDEO_ENABLED } from '../utils/constants';
+import { IS_VIDEO_ENABLED } from '@/utils';
 
 export interface ManagedMedia {
   id: string;

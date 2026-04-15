@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { useFormikContext } from 'formik';
-import TextField from '../../../components/TextField/TextField';
-import DateTimePicker from '../../../components/DateTimePicker/DateTimePicker';
-import BottomSheet from '../../../components/BottomSheet/BottomSheet';
+import { TextField, DateTimePicker, BottomSheet } from '@/components';
 
 interface PostDetailsValues {
   title: string;

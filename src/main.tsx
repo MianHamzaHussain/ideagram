@@ -1,3 +1,11 @@
+import "@fontsource/geist/400.css";
+import "@fontsource/geist/500.css";
+import "@fontsource/geist/600.css";
+import "@fontsource/geist/700.css";
+import "@fontsource/inter/400.css";
+import "@fontsource/inter/500.css";
+import "@fontsource/inter/600.css";
+import "@fontsource/inter/700.css";
 import "@fontsource/plus-jakarta-sans/700.css";
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
@@ -6,13 +14,14 @@ import { HelmetProvider } from 'react-helmet-async';
 import './index.css'
 import App from './App.tsx'
 import { registerSW } from 'virtual:pwa-register'
+import { STALE_TIME } from '@/config/queryConfig'
 
 registerSW({ immediate: true })
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 60 * 5, // 5 minutes
+      staleTime: STALE_TIME.DEFAULT,
       retry: 1,
     },
   },

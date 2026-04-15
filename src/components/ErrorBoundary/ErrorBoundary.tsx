@@ -7,7 +7,7 @@ import { useRouteError } from 'react-router-dom';
  * Shared Premium Error UI Layout
  */
 interface ErrorFallbackUIProps {
-  error: any;
+  error: unknown;
   resetErrorBoundary: () => void;
 }
 
@@ -34,7 +34,7 @@ const ErrorFallbackUI = ({ error, resetErrorBoundary }: ErrorFallbackUIProps) =>
         {import.meta.env.DEV && (
           <div className="w-full text-center overflow-auto max-h-[140px]">
             <p className="text-[14px] font-medium text-brand-red break-words leading-5 px-4">
-              {error?.message || (typeof error === 'string' ? error : 'Unknown Error')}
+              {error instanceof Error ? error.message : (typeof error === 'string' ? error : 'Unknown Error')}
             </p>
           </div>
         )}
@@ -77,7 +77,7 @@ interface Props {
 
 interface State {
   hasError: boolean;
-  error: any;
+  error: unknown;
 }
 
 /**
@@ -90,11 +90,11 @@ class ErrorBoundary extends Component<Props, State> {
     this.state = { hasError: false, error: null };
   }
 
-  static getDerivedStateFromError(error: any) {
+  static getDerivedStateFromError(error: unknown) {
     return { hasError: true, error };
   }
 
-  componentDidCatch(error: any, errorInfo: React.ErrorInfo) {
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     console.error("ErrorBoundary caught an error", error, errorInfo);
   }
 

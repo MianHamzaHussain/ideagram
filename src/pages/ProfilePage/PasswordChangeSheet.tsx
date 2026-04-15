@@ -1,12 +1,10 @@
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import TextField from '../../components/TextField/TextField';
-import BottomSheet from '../../components/BottomSheet/BottomSheet';
-import PageHeader from '../../components/PageHeader/PageHeader';
+import { TextField, BottomSheet, PageHeader } from '@/components';
 import { useMutation } from '@tanstack/react-query';
-import { authApi } from '../../api/auth';
+import { authApi } from '@/api';
 import { toast } from 'react-toastify';
-import { getErrorMessage } from '../../utils/errorUtils';
+import { getErrorMessage } from '@/utils';
 
 const ChangePasswordSchema = Yup.object().shape({
   currentPassword: Yup.string().required('Current password is required'),

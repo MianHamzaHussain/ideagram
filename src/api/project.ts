@@ -25,21 +25,23 @@ export interface ProjectListResponse {
   next: string | null;
   previous: string | null;
   results: Project[];
+  page?: number;
+  total_pages?: number;
 }
 
 export const projectApi = {
   list: async (params: {
-    pag_type: string;
-    before_id?: number;
+    pag_type?: string;
+    page?: number;
     page_size?: number;
     keyword?: string;
   }): Promise<ProjectListResponse> => {
     const queryParams = new URLSearchParams({
-      pag_type: params.pag_type,
+      pag_type: params.pag_type || 'standard',
     });
 
-    if (params.before_id) {
-      queryParams.append('before_id', params.before_id.toString());
+    if (params.page) {
+      queryParams.append('page', params.page.toString());
     }
 
     if (params.page_size) {

@@ -243,14 +243,14 @@ const FiltersModal = ({ isOpen, onClose, onApply, initialFilters }: FiltersModal
             <Button
               variant="brand-outline"
               onClick={handleReset}
-              className="flex-1 !h-14"
+              className="flex-1"
             >
               Reset
             </Button>
             <Button
               variant="primary"
               onClick={handleSearch}
-              className="flex-1 !h-14 shadow-lg"
+              className="flex-1 shadow-lg"
             >
               Search
             </Button>

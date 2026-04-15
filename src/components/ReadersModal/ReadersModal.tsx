@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { listContainerVariants, listItemVariants } from '@/config/animations';
-import { ReaderItem, PageHeader, InfiniteScrollSentinel } from '@/components';
+import { ReaderItem, PageHeader, InfiniteScrollSentinel, ListItemSkeleton } from '@/components';
 import { useInfiniteViewers } from '@/hooks';
 
 interface ReadersModalProps {
@@ -79,18 +79,8 @@ const ReadersModal = ({ isOpen, onClose, reportId }: ReadersModalProps) => {
 
             {/* Viewers List */}
             <div className="flex-1 overflow-y-auto pb-6 overscroll-contain w-full scrollbar-hide">
-              {isLoading ? (
-                <div className="p-4 space-y-4">
-                  {[1, 2, 3].map(n => (
-                    <div key={n} className="flex gap-3 animate-pulse px-4 py-3">
-                      <div className="w-10 h-10 bg-neutral-100 rounded-full" />
-                      <div className="flex-1 space-y-2">
-                        <div className="w-24 h-4 bg-neutral-100 rounded" />
-                        <div className="w-full h-8 bg-neutral-100 rounded" />
-                      </div>
-                    </div>
-                  ))}
-                </div>
+              {isLoading && viewers.length === 0 ? (
+                <ListItemSkeleton count={4} className="p-4" />
               ) : viewers && viewers.length > 0 ? (
                 <motion.div
                   variants={listContainerVariants}

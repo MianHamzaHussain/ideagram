@@ -5,7 +5,8 @@ import {
   PageHeader,
   SelectionGroup,
   SelectablePill,
-  Button
+  Button,
+  TagGroupSkeleton
 } from '@/components';
 import { useTags } from '@/hooks';
 import type { Tag } from '@/api';
@@ -194,17 +195,7 @@ const FiltersModal = ({ isOpen, onClose, onApply, initialFilters }: FiltersModal
                   className="flex flex-col gap-10"
                 >
                   {isTagsLoading ? (
-                    <div className="flex flex-col gap-10">
-                      {[1, 2].map(i => (
-                        <div key={i} className="flex flex-col gap-4 animate-pulse">
-                          <div className="h-6 bg-neutral-100 rounded w-24 mb-1" />
-                          <div className="grid grid-cols-2 gap-3">
-                            <div className="h-11 bg-neutral-100 rounded-full w-full" />
-                            <div className="h-11 bg-neutral-100 rounded-full w-full" />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+                    <TagGroupSkeleton count={2} />
                   ) : (
                     Object.entries(groupedTags).map(([groupName, groupTags]) => {
                       const isSingleSelect = SINGLE_SELECT_GROUPS.includes(groupName);

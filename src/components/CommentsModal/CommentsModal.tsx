@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { listContainerVariants, listItemVariants } from '@/config/animations';
-import { CommentItem, PageHeader, InfiniteScrollSentinel, CommentFormModal } from '@/components';
+import { CommentItem, PageHeader, InfiniteScrollSentinel, CommentFormModal, ListItemSkeleton } from '@/components';
 import { useInfiniteComments } from '@/hooks';
 
 interface CommentsModalProps {
@@ -89,17 +89,7 @@ const CommentsModal = ({ isOpen, onClose, reportId }: CommentsModalProps) => {
             {/* Comments List */}
             <div className="flex-1 overflow-y-auto pb-6 overscroll-contain w-full scrollbar-hide">
               {isLoading && comments.length === 0 ? (
-                <div className="p-4 space-y-4">
-                  {[1, 2, 3].map(n => (
-                    <div key={n} className="flex gap-3 animate-pulse">
-                      <div className="w-10 h-10 bg-neutral-100 rounded-full" />
-                      <div className="flex-1 space-y-2">
-                        <div className="w-24 h-4 bg-neutral-100 rounded" />
-                        <div className="w-full h-12 bg-neutral-100 rounded" />
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                <ListItemSkeleton count={5} className="p-4" />
               ) : comments.length > 0 ? (
                 <motion.div
                   variants={listContainerVariants}

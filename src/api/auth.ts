@@ -28,6 +28,10 @@ export interface PasswordChangeRequest {
   newPassword2: string;
 }
 
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
 export const authApi = {
   login: async (data: LoginRequest): Promise<LoginResponse> => {
     return apiClient.post<LoginResponse>('auth/login/', data);
@@ -40,5 +44,8 @@ export const authApi = {
   },
   changePassword: async (data: PasswordChangeRequest): Promise<{ detail: string }> => {
     return apiClient.post<{ detail: string }>('auth/password/change/', data);
+  },
+  forgotPassword: async (data: ForgotPasswordRequest): Promise<{ detail: string }> => {
+    return apiClient.post<{ detail: string }>('auth/password/reset/', data);
   },
 };

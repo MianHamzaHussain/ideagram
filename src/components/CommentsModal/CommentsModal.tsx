@@ -1,8 +1,8 @@
-import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { listContainerVariants, listItemVariants } from '@/config/animations';
-import { CommentItem, PageHeader, InfiniteScrollSentinel, CommentFormModal, ListItemSkeleton, BottomSheet } from '@/components';
+import { CommentItem, PageHeader, InfiniteScrollSentinel, ListItemSkeleton, BottomSheet } from '@/components';
 import { useInfiniteComments } from '@/hooks';
+import { useModalStore } from '@/store';
 
 interface CommentsModalProps {
   isOpen: boolean;
@@ -11,7 +11,7 @@ interface CommentsModalProps {
 }
 
 const CommentsModal = ({ isOpen, onClose, reportId }: CommentsModalProps) => {
-  const [isFormOpen, setIsFormOpen] = useState(false);
+  const { openCommentForm } = useModalStore();
   const {
     data,
     fetchNextPage,
@@ -20,6 +20,13 @@ const CommentsModal = ({ isOpen, onClose, reportId }: CommentsModalProps) => {
   } = useInfiniteComments(reportId);
 
   const comments = data?.pages.flat() || [];
+
+  const handleOpenForm = () => {
+    openCommentForm({
+      reportId,
+      mode: 'create'
+    });
+  };
 
   return (
     <BottomSheet isOpen={isOpen} onClose={onClose} fullHeight={true}>
@@ -32,7 +39,7 @@ const CommentsModal = ({ isOpen, onClose, reportId }: CommentsModalProps) => {
         showHandle={true}
         rightElement={
           <button
-            onClick={() => setIsFormOpen(true)}
+            onClick={handleOpenForm}
             className="p-2 -mr-2 text-brand-blue active:opacity-50 transition-opacity focus:outline-none font-bold"
           >
             Add
@@ -66,7 +73,7 @@ const CommentsModal = ({ isOpen, onClose, reportId }: CommentsModalProps) => {
           <div className="flex flex-col items-center justify-center min-h-[400px] gap-4 px-8 text-center">
             <p className="text-neutral-500 font-inter text-[16px]">There is no comment, please add</p>
             <button
-              onClick={() => setIsFormOpen(true)}
+              onClick={handleOpenForm}
               className="h-[40px] px-6 rounded-full bg-primary-300 text-white font-bold text-[14px] hover:bg-primary-400 transition-colors"
             >
               Add Comment
@@ -74,15 +81,8 @@ const CommentsModal = ({ isOpen, onClose, reportId }: CommentsModalProps) => {
           </div>
         )}
       </div>
-
-      <CommentFormModal
-        isOpen={isFormOpen}
-        onClose={() => setIsFormOpen(false)}
-        reportId={reportId}
-        mode="create"
-      />
     </BottomSheet>
   );
 };
 
-export default CommentsModal;
+export default CommentsModal;

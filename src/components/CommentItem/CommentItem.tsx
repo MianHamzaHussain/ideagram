@@ -1,9 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Edit2, Trash2 } from 'react-feather';
-import { useAuthStore } from '@/store';
+import { useAuthStore, useModalStore } from '@/store';
 import { useDeleteComment } from '@/hooks';
-import ConfirmModal from '../Modal/ConfirmModal';
-import CommentFormModal from '../CommentForm/CommentFormModal';
 import { toast } from 'react-toastify';
 import type { Comment } from '@/api';
 import { getErrorMessage, getInitials } from '@/utils';
@@ -15,11 +13,10 @@ interface CommentItemProps {
 
 const CommentItem = ({ comment, reportId }: CommentItemProps) => {
   const { user } = useAuthStore();
+  const { openCommentForm, openConfirm } = useModalStore();
   const deleteMutation = useDeleteComment(reportId);
 
   const [swipeOffset, setSwipeOffset] = useState(0);
-  const [isEditOpen, setIsEditOpen] = useState(false);
-  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
   const startX = useRef<number | null>(null);
   const currentX = useRef<number | null>(null);
@@ -46,11 +43,7 @@ const CommentItem = ({ comment, reportId }: CommentItemProps) => {
     currentX.current = e.touches[0].clientX;
     const diff = currentX.current - startX.current;
 
-    // Dampen the swipe or limit it
-    // Swipe Left (Edit): Negative diff
-    // Swipe Right (Delete): Positive diff
     if (Math.abs(diff) > 10) {
-      // Limit offset to actions width (e.g., 45px)
       const offset = Math.max(-45, Math.min(45, diff));
       setSwipeOffset(offset);
     }
@@ -59,10 +52,8 @@ const CommentItem = ({ comment, reportId }: CommentItemProps) => {
   const handleTouchEnd = () => {
     if (!isOwner) return;
     if (swipeOffset < -20) {
-      // Committed to Edit (Swipe Left)
       setSwipeOffset(-45);
     } else if (swipeOffset > 20) {
-      // Committed to Delete (Swipe Right)
       setSwipeOffset(45);
     } else {
       resetSwipe();
@@ -78,52 +69,71 @@ const CommentItem = ({ comment, reportId }: CommentItemProps) => {
     } catch (error) {
       toast.error(getErrorMessage(error, 'Failed to delete comment'));
     } finally {
-      setIsConfirmOpen(false);
       resetSwipe();
     }
   };
 
-  // Close swipe on scroll or click outside (handled naturally by offset state)
+  const onEditClick = () => {
+    openCommentForm({
+      reportId,
+      mode: 'edit',
+      commentId: comment.id,
+      initialText: comment.text
+    });
+    resetSwipe();
+  };
+
+  const onDeleteClick = () => {
+    openConfirm({
+      title: 'Delete Comment',
+      message: 'Are you sure you want to delete this comment? This action cannot be undone.',
+      confirmText: 'Delete',
+      onConfirm: handleDelete,
+      variant: 'destructive'
+    });
+    resetSwipe();
+  };
+
   useEffect(() => {
     if (swipeOffset !== 0) {
       const timer = setTimeout(() => {
-        // Optional: auto-reset if no action taken?
+        resetSwipe();
       }, 5000);
       return () => clearTimeout(timer);
     }
   }, [swipeOffset]);
 
   return (
-    <div className="relative w-full overflow-hidden group">
-      {/* Action Layer: Edit (Swipe Left revealed on Right) */}
+    <div className="relative w-full overflow-hidden group border-b border-neutral-100 last:border-0">
+      {/* Action Layer: Edit (Revealed by Swipe Left) */}
       <div
-        className="absolute inset-y-0 right-0 w-[45px] flex items-center justify-center cursor-pointer"
-        onClick={() => setIsEditOpen(true)}
+        className="absolute inset-y-0 right-0 w-[45px] flex items-center justify-center cursor-pointer bg-primary-50"
+        onClick={onEditClick}
         role="button"
         aria-label="Edit comment"
       >
-        <Edit2 size={20} className="text-brand-blue" />
+        <Edit2 size={18} className="text-primary-600" />
       </div>
 
-      {/* Action Layer: Delete (Swipe Right revealed on Left) */}
+      {/* Action Layer: Delete (Revealed by Swipe Right) */}
       <div
-        className="absolute inset-y-0 left-0 w-[45px] flex items-center justify-center cursor-pointer"
-        onClick={() => setIsConfirmOpen(true)}
+        className="absolute inset-y-0 left-0 w-[45px] flex items-center justify-center cursor-pointer bg-brand-red/5"
+        onClick={onDeleteClick}
         role="button"
         aria-label="Delete comment"
       >
-        <Trash2 size={20} className="text-brand-red" />
+        <Trash2 size={18} className="text-brand-red" />
       </div>
 
       {/* Content Layer */}
       <div
-        className="relative bg-white flex items-start gap-3 w-full py-3 px-4 transition-transform duration-200 ease-out z-10 select-none"
+        className="relative bg-white flex items-start gap-3 w-full py-4 px-4 transition-transform duration-300 ease-out z-10 select-none"
         style={{ transform: `translateX(${swipeOffset}px)` }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        {/* Avatar Placeholder (Stylized Initials) */}
+        {/* Avatar */}
         <div className="w-10 h-10 rounded-full bg-primary-50 flex items-center justify-center shrink-0 border border-primary-100 select-none">
           <span className="text-primary-600 font-bold text-sm">
             {getInitials(comment.authorName)}
@@ -151,7 +161,7 @@ const CommentItem = ({ comment, reportId }: CommentItemProps) => {
               {comment.media.map((item) => (
                 <div
                   key={item.id}
-                  className="relative w-[120px] h-[120px] rounded-xl overflow-hidden bg-neutral-100 border border-neutral-200"
+                  className="relative w-[80px] h-[80px] rounded-lg overflow-hidden bg-neutral-100 border border-neutral-200"
                 >
                   {item.mediaType === 'video' ? (
                     <video
@@ -163,7 +173,7 @@ const CommentItem = ({ comment, reportId }: CommentItemProps) => {
                   ) : (
                     <img
                       src={item.image || item.thumbnail}
-                      alt="Comment Attachment"
+                      alt="Attachment"
                       className="w-full h-full object-cover"
                     />
                   )}
@@ -173,34 +183,6 @@ const CommentItem = ({ comment, reportId }: CommentItemProps) => {
           )}
         </div>
       </div>
-
-      {/* Edit Modal */}
-      <CommentFormModal
-        isOpen={isEditOpen}
-        onClose={() => {
-          setIsEditOpen(false);
-          resetSwipe();
-        }}
-        reportId={reportId}
-        mode="edit"
-        commentId={comment.id}
-        initialText={comment.text}
-      />
-
-      {/* Delete Confirmation */}
-      <ConfirmModal
-        isOpen={isConfirmOpen}
-        onClose={() => {
-          setIsConfirmOpen(false);
-          resetSwipe();
-        }}
-        onConfirm={handleDelete}
-        title="Delete Comment"
-        message="Are you sure you want to delete this comment? This action cannot be undone."
-        confirmText="Delete"
-        variant="destructive"
-        isLoading={deleteMutation.isPending}
-      />
     </div>
   );
 };

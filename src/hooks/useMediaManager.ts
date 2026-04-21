@@ -1,5 +1,6 @@
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import { IS_VIDEO_ENABLED } from '@/utils';
+import { useModalStore } from '@/store';
 
 export interface ManagedMedia {
   id: string;
@@ -9,14 +10,14 @@ export interface ManagedMedia {
   file?: File;
 }
 
-const generateId = () => Math.random().toString(36).substr(2, 9);
+const generateId = () => Math.random().toString(36).substring(2, 9);
 
 /**
  * Custom hook to manage media selection and capturing across the app.
  * Provides a unified way to handle gallery selection and camera capture.
  */
 export const useMediaManager = (onAddMedia?: (media: ManagedMedia) => void) => {
-  const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const { openCamera, closeCamera } = useModalStore();
 
   const handleCapture = useCallback((fileData: { type: 'image' | 'video'; dataUrl: string; file?: File }) => {
     const newItem: ManagedMedia = {
@@ -29,9 +30,9 @@ export const useMediaManager = (onAddMedia?: (media: ManagedMedia) => void) => {
     if (onAddMedia) {
       onAddMedia(newItem);
     }
-    setIsCameraOpen(false);
+    closeCamera();
     return newItem;
-  }, [onAddMedia]);
+  }, [onAddMedia, closeCamera]);
 
   const processFiles = useCallback(async (files: FileList): Promise<ManagedMedia[]> => {
     const newItems: ManagedMedia[] = [];
@@ -65,8 +66,7 @@ export const useMediaManager = (onAddMedia?: (media: ManagedMedia) => void) => {
 
 
   return {
-    isCameraOpen,
-    setIsCameraOpen,
+    openCamera,
     handleCapture,
     processFiles,
   };

@@ -1,22 +1,18 @@
-import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import {
   Header,
   Footer,
   ReportCard,
   InfiniteScrollSentinel,
-  FiltersModal,
   AnimatedPage,
   PageMeta,
   ReportSkeleton
 } from '@/components';
 import { useInfiniteReports } from '@/hooks';
 import { mapReportToCardProps } from '@/utils';
-import { useFilterStore } from '@/store';
+import { useFilterStore, useModalStore } from '@/store';
 import Tabs from '@/components/Tabs/Tabs';
 import { feedContainerVariants, feedItemVariants } from '@/config/animations';
-
-
 
 /**
  * Modern Industry-Standard PWA Home Page
@@ -24,7 +20,7 @@ import { feedContainerVariants, feedItemVariants } from '@/config/animations';
  */
 const HomePage = () => {
   const { reportType, setReportType, tagIds, tagsMap, keyword, projectId } = useFilterStore();
-  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+  const { openFilters } = useModalStore();
 
   const {
     data,
@@ -55,11 +51,21 @@ const HomePage = () => {
     });
   };
 
+  const handleOpenFilters = () => {
+    openFilters({
+      initialFilters: {
+        reportType,
+        tagIds,
+      },
+      onApply: handleApplyFilters,
+    });
+  };
+
   return (
     <AnimatedPage animationType="fade">
       <PageMeta title="Reports" description="View and manage project progress and trouble reports." />
       <div className="flex flex-col h-full bg-white overflow-hidden font-inter">
-        <Header onFilterClick={() => setIsFilterModalOpen(true)} />
+        <Header onFilterClick={handleOpenFilters} />
         <Tabs activeTab={reportType} onTabChange={setReportType} />
 
         {/* Scrollable Content Area */}
@@ -98,16 +104,6 @@ const HomePage = () => {
         </main>
 
         <Footer />
-
-        <FiltersModal
-          isOpen={isFilterModalOpen}
-          onClose={() => setIsFilterModalOpen(false)}
-          onApply={handleApplyFilters}
-          initialFilters={useMemo(() => ({
-            reportType: reportType,
-            tagIds: tagIds,
-          }), [reportType, tagIds])}
-        />
       </div>
     </AnimatedPage>
   );

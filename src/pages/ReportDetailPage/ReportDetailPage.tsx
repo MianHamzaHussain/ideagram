@@ -2,7 +2,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import {
   ImageCarousel,
-  CommentsModal,
   PageHeader,
   DetailItem,
   StatusPill,
@@ -10,8 +9,7 @@ import {
   CommentItem,
   ReaderItem,
   AnimatedPage,
-  PageMeta,
-  GlobalModals
+  PageMeta
 } from '@/components';
 import {
   useReportDetails,

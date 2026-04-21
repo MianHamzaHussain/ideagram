@@ -61,9 +61,9 @@ const PageHeader = ({
     `}>
       {showHandle && (
         <motion.button 
-          whileTap={{ opacity: 0.6 }}
+          whileTap={{ scale: 0.95, opacity: 0.6 }}
           type="button"
-          onClick={handleBack}
+          onTap={handleBack}
           className="flex justify-center items-start w-full h-[24px] pt-[12px] shrink-0 transition-opacity focus:outline-none"
           aria-label="Close modal"
         >
@@ -82,7 +82,7 @@ const PageHeader = ({
             whileTap={{ scale: 0.9 }}
             transition={{ type: "spring", stiffness: 400, damping: 20 }}
             type="button"
-            onClick={handleBack}
+            onTap={handleBack}
             aria-label={backIcon === 'arrow' ? "Go back" : "Close"}
             className="p-2 -ml-2 text-neutral-900 z-10 focus:outline-none"
           >

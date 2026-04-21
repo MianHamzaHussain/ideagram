@@ -10,6 +10,7 @@ export const useMarkAsViewed = () => {
       // Invalidate specific report data to update viewer counts and list
       queryClient.invalidateQueries({ queryKey: ['report', id] });
       queryClient.invalidateQueries({ queryKey: ['viewers', id] });
+      queryClient.invalidateQueries({ queryKey: ['reports'] });
     },
   });
 };

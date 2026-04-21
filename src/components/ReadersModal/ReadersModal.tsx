@@ -1,7 +1,6 @@
-import { useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { listContainerVariants, listItemVariants } from '@/config/animations';
-import { ReaderItem, PageHeader, InfiniteScrollSentinel, ListItemSkeleton } from '@/components';
+import { ReaderItem, PageHeader, InfiniteScrollSentinel, ListItemSkeleton, BottomSheet } from '@/components';
 import { useInfiniteViewers } from '@/hooks';
 
 interface ReadersModalProps {
@@ -9,8 +8,6 @@ interface ReadersModalProps {
   onClose: () => void;
   reportId: number;
 }
-
-
 
 const ReadersModal = ({ isOpen, onClose, reportId }: ReadersModalProps) => {
   const {
@@ -20,96 +17,49 @@ const ReadersModal = ({ isOpen, onClose, reportId }: ReadersModalProps) => {
     isLoading,
   } = useInfiniteViewers(reportId);
 
-  // Prevent body scrolling when modal is open
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [isOpen]);
-
   const viewers = data?.pages.flat() || [];
   
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <div className="fixed inset-0 z-[150] flex flex-col justify-end items-center max-w-[600px] mx-auto overflow-hidden">
-          {/* Top Backdrop Area / Scrim */}
+    <BottomSheet isOpen={isOpen} onClose={onClose} fullHeight={true}>
+      <PageHeader
+        title="Readers"
+        onBack={onClose}
+        variant="default"
+        centered={true}
+        showBorder={false}
+        showHandle={true}
+      />
+
+      {/* Viewers List */}
+      <div className="flex-1 overflow-y-auto pb-6 overscroll-contain w-full scrollbar-hide">
+        {isLoading && viewers.length === 0 ? (
+          <ListItemSkeleton count={4} className="p-4" />
+        ) : viewers && viewers.length > 0 ? (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-[#414346]/20 pointer-events-auto"
-            onClick={onClose}
-          />
-          
-          {/* Sheet Content */}
-          <motion.div
-            initial={{ y: '100%' }}
-            animate={{ y: 0 }}
-            exit={{ y: '100%' }}
-            transition={{
-              type: 'spring',
-              damping: 30,
-              stiffness: 300,
-              mass: 0.8
-            }}
-            drag="y"
-            dragConstraints={{ top: 0 }}
-            dragElastic={0.1}
-            onDragEnd={(_, info) => {
-              if (info.offset.y > 150 || info.velocity.y > 500) {
-                onClose();
-              }
-            }}
-            className="relative w-full h-full mt-4 bg-white rounded-t-[32px] shadow-2xl flex flex-col overflow-hidden"
+            variants={listContainerVariants}
+            initial="hidden"
+            animate="show"
+            className="flex flex-col w-full"
           >
-            <PageHeader
-              title="Readers"
-              onBack={onClose}
-              variant="default"
-              centered={true}
-              showBorder={false}
-              showHandle={true}
+            {viewers.map((viewer) => (
+              <motion.div key={viewer.id} variants={listItemVariants}>
+                <ReaderItem viewer={viewer} />
+              </motion.div>
+            ))}
+
+            <InfiniteScrollSentinel
+              hasNextPage={hasNextPage}
+              onIntersect={fetchNextPage}
+              isLoading={isLoading}
             />
-
-            {/* Viewers List */}
-            <div className="flex-1 overflow-y-auto pb-6 overscroll-contain w-full scrollbar-hide">
-              {isLoading && viewers.length === 0 ? (
-                <ListItemSkeleton count={4} className="p-4" />
-              ) : viewers && viewers.length > 0 ? (
-                <motion.div
-                  variants={listContainerVariants}
-                  initial="hidden"
-                  animate="show"
-                  className="flex flex-col w-full"
-                >
-                  {viewers.map((viewer) => (
-                    <motion.div key={viewer.id} variants={listItemVariants}>
-                      <ReaderItem viewer={viewer} />
-                    </motion.div>
-                  ))}
-
-                  <InfiniteScrollSentinel
-                    hasNextPage={hasNextPage}
-                    onIntersect={fetchNextPage}
-                    isLoading={isLoading}
-                  />
-                </motion.div>
-              ) : (
-                <div className="flex flex-col items-center justify-center min-h-[300px] text-neutral-400">
-                  <p>No readers found</p>
-                </div>
-              )}
-            </div>
           </motion.div>
-        </div>
-      )}
-    </AnimatePresence>
+        ) : (
+          <div className="flex flex-col items-center justify-center min-h-[300px] text-neutral-400">
+            <p>No readers found</p>
+          </div>
+        )}
+      </div>
+    </BottomSheet>
   );
 };
 

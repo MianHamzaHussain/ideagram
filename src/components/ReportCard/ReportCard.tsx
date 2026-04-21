@@ -4,6 +4,7 @@ import { User, PhoneCall } from 'react-feather';
 import { CustomChatIcon } from '@/components/Icons/CustomIcons';
 import { ImageCarousel, CarouselIndicators, StatusPill } from '@/components';
 import { Link } from 'react-router-dom';
+import { useModalStore } from '@/store/useModalStore';
 
 interface ReportCardProps {
   id: number;
@@ -35,6 +36,7 @@ const ReportCard = ({
   postedBy,
 }: ReportCardProps) => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const { openReaders, openComments } = useModalStore();
 
   return (
     <motion.div
@@ -78,24 +80,41 @@ const ReportCard = ({
         {/* Badges Container */}
         <div className="flex w-[96px] h-12">
           {/* Comments Badge */}
-          <div className="flex items-start w-[48px] h-12" role="button" aria-label={`${commentsCount} comments`}>
-            <div className="w-[48px] h-[48px] p-3 flex items-center justify-center rounded-full transition-colors">
+          <button 
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              openComments(id);
+            }}
+            className="flex items-start w-[48px] h-12 group" 
+            aria-label={`${commentsCount} comments`}
+          >
+            <div className="w-[48px] h-[48px] p-3 flex items-center justify-center rounded-full group-hover:bg-neutral-50 transition-colors">
               <CustomChatIcon size={24} className="text-neutral-900" />
             </div>
             {/* Top-aligned count with refined left margin (Exactly 3px gap from icon edge) */}
             <div className="flex flex-col h-9 pt-3 min-w-[8px] -ml-[9px]">
               <span className="text-[12px] font-bold leading-none text-neutral-900">{commentsCount}</span>
             </div>
-          </div>
+          </button>
           {/* Participants Badge */}
-          <div className="flex items-start w-[48px] h-12" role="button" aria-label={`${participantsCount} participants`}>
-            <div className="w-[48px] h-[48px] p-3 flex items-center justify-center rounded-full hover:bg-neutral-50 transition-colors cursor-pointer">
+          <button 
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              openReaders(id);
+            }}
+            disabled={participantsCount === 0}
+            className="flex items-start w-[48px] h-12 group disabled:opacity-50" 
+            aria-label={`${participantsCount} participants`}
+          >
+            <div className="w-[48px] h-[48px] p-3 flex items-center justify-center rounded-full group-hover:bg-neutral-50 transition-colors">
               <User size={24} className="text-neutral-900" />
             </div>
             <div className="flex flex-col h-9 pt-3 min-w-[8px] -ml-[9px]">
               <span className="text-[12px] font-bold leading-none text-neutral-900">{participantsCount}</span>
             </div>
-          </div>
+          </button>
         </div>
 
         {/* Dynamic Dot Indicators (Centered) */}

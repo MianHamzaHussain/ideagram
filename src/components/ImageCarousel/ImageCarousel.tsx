@@ -76,12 +76,19 @@ const ImageCarousel = ({
         ref={scrollRef}
         onScroll={handleScroll}
         className="flex gap-[10px] overflow-x-auto snap-x snap-mandatory scrollbar-hide px-[15px] h-[444px]"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        style={{ 
+          scrollbarWidth: 'none', 
+          msOverflowStyle: 'none',
+          touchAction: 'pan-x',
+          WebkitOverflowScrolling: 'touch',
+          willChange: 'scroll-position'
+        }}
       >
         {images.map((img, index) => (
           <div
             key={index}
             className="flex-none w-[334px] h-[444px] flex flex-col snap-start"
+            style={{ scrollSnapStop: 'always' }}
             role="group"
             aria-roledescription="slide"
             aria-label={`Slide ${index + 1} of ${images.length}`}
@@ -102,7 +109,8 @@ const ImageCarousel = ({
                 <img
                   src={img.url}
                   alt={img.caption || `Product image ${index + 1}`}
-                  className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                  draggable="false"
+                  className="w-full h-full object-cover"
                 />
               )}
             </div>

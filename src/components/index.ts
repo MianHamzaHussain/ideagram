@@ -31,6 +31,7 @@ export { default as PageMeta } from './PageMeta';
 export { default as Tabs } from './Tabs/Tabs';
 export { default as PWAInstallPrompt } from './PWAInstallPrompt/PWAInstallPrompt';
 export { default as CommentFormModal } from './CommentForm/CommentFormModal';
+export { default as GlobalModals } from './GlobalModals/GlobalModals';
 export { 
   ReportSkeleton, 
   ProjectSkeleton, 

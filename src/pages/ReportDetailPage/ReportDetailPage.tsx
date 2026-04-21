@@ -7,11 +7,11 @@ import {
   DetailItem,
   StatusPill,
   CarouselIndicators,
-  ReadersModal,
   CommentItem,
   ReaderItem,
   AnimatedPage,
-  PageMeta
+  PageMeta,
+  GlobalModals
 } from '@/components';
 import {
   useReportDetails,
@@ -23,13 +23,13 @@ import {
 } from '@/hooks';
 import { getInitials, parseExplanation, categorizeReportTags, mapReportMedia } from '@/utils';
 import { motion } from 'framer-motion';
+import { useModalStore } from '@/store/useModalStore';
 
 const ReportDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isCommentsModalOpen, setIsCommentsModalOpen] = useState(false);
-  const [isReadersModalOpen, setIsReadersModalOpen] = useState(false);
+  const { openReaders, openComments } = useModalStore();
 
   const reportId = Number(id);
   const { data: report, isLoading, isError } = useReportDetails(reportId);
@@ -190,7 +190,7 @@ const ReportDetailPage = () => {
               <motion.button
                 whileTap={{ scale: 0.96 }}
                 transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                onClick={() => setIsCommentsModalOpen(true)}
+                onClick={() => openComments(reportId)}
                 className="w-full h-[48px] rounded-[100px] border border-primary-300 text-primary-300 font-semibold text-[16px] flex items-center justify-center hover:bg-neutral-50 focus:outline-none"
               >
                 All Comments ({report.commentCount || 0})
@@ -219,7 +219,7 @@ const ReportDetailPage = () => {
               <motion.button
                 whileTap={report.viewerCount === 0 ? {} : { scale: 0.96 }}
                 transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                onClick={() => setIsReadersModalOpen(true)}
+                onClick={() => openReaders(reportId)}
                 disabled={report.viewerCount === 0}
                 className="w-full h-[48px] rounded-[100px] border border-primary-300 text-primary-300 font-semibold text-[16px] flex items-center justify-center hover:bg-neutral-50 disabled:opacity-50 disabled:border-neutral-200 disabled:text-neutral-400 focus:outline-none"
               >
@@ -228,18 +228,6 @@ const ReportDetailPage = () => {
             </div>
           </div>
         </div>
-
-        <CommentsModal
-          isOpen={isCommentsModalOpen}
-          onClose={() => setIsCommentsModalOpen(false)}
-          reportId={reportId}
-        />
-
-        <ReadersModal
-          isOpen={isReadersModalOpen}
-          onClose={() => setIsReadersModalOpen(false)}
-          reportId={reportId}
-        />
       </div>
     </AnimatedPage>
   );

@@ -2,7 +2,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { Suspense } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import SplashScreen from '@/pages/SplashScreen/SplashScreen';
-import { ScrollToTop } from '@/components';
+import { ScrollToTop, GlobalModals } from '@/components';
 
 const MainLayout = () => {
   const location = useLocation();
@@ -10,6 +10,7 @@ const MainLayout = () => {
   return (
     <div className="flex flex-col w-full max-w-[600px] h-[100dvh] mx-auto bg-white relative overflow-hidden" role="application">
       <ScrollToTop />
+      <GlobalModals />
 
       {/* Skip to Content - Accessibility */}
       <a

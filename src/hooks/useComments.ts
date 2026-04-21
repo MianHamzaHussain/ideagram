@@ -24,6 +24,7 @@ export const useInfiniteComments = (reportId: number) => {
 const invalidateCommentQueries = (queryClient: QueryClient, reportId: number) => {
   queryClient.invalidateQueries({ queryKey: ['comments', reportId] });
   queryClient.invalidateQueries({ queryKey: ['report', reportId] });
+  queryClient.invalidateQueries({ queryKey: ['reports'] });
 };
 
 export const useCreateComment = (reportId: number) => {

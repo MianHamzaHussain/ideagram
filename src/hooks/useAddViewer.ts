@@ -11,6 +11,7 @@ export const useAddViewer = () => {
       queryClient.invalidateQueries({ queryKey: ['viewers', reportId] });
       // Also potentially invalidate the report details if viewerCount is displayed
       queryClient.invalidateQueries({ queryKey: ['report', reportId] });
+      queryClient.invalidateQueries({ queryKey: ['reports'] });
     },
   });
 };

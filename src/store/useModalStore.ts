@@ -4,12 +4,19 @@ interface ModalState {
   currentReportId: number | null;
   isReadersOpen: boolean;
   isCommentsOpen: boolean;
-  
+
   // Filters Modal
   isFiltersOpen: boolean;
   filtersProps: {
-    initialFilters?: any;
-    onApply?: (filters: any) => void;
+    initialFilters: {
+      reportType?: 'progress' | 'trouble';
+      tagIds: number[];
+    };
+    onApply: (filters: {
+      reportType?: 'progress' | 'trouble';
+      tagsMap: Record<number, number[]>;
+      tagIds: number[];
+    }) => void;
   } | null;
 
   // Comment Form Modal
@@ -24,7 +31,7 @@ interface ModalState {
   // Camera Modal
   isCameraOpen: boolean;
   cameraProps: {
-    onCapture: (data: any) => void;
+    onCapture: (fileData: { type: 'image' | 'video'; dataUrl: string; file?: File }) => void;
     allowedModes?: ('photo' | 'video')[];
   } | null;
 
@@ -44,16 +51,16 @@ interface ModalState {
   closeReaders: () => void;
   openComments: (reportId: number) => void;
   closeComments: () => void;
-  
+
   openFilters: (props: NonNullable<ModalState['filtersProps']>) => void;
   closeFilters: () => void;
-  
+
   openCommentForm: (props: NonNullable<ModalState['commentFormProps']>) => void;
   closeCommentForm: () => void;
-  
+
   openCamera: (props: NonNullable<ModalState['cameraProps']>) => void;
   closeCamera: () => void;
-  
+
   openConfirm: (props: NonNullable<ModalState['confirmProps']>) => void;
   closeConfirm: () => void;
 }
@@ -62,22 +69,22 @@ export const useModalStore = create<ModalState>((set) => ({
   currentReportId: null,
   isReadersOpen: false,
   isCommentsOpen: false,
-  
+
   isFiltersOpen: false,
   filtersProps: null,
-  
+
   isCommentFormOpen: false,
   commentFormProps: null,
-  
+
   isCameraOpen: false,
   cameraProps: null,
-  
+
   isConfirmOpen: false,
   confirmProps: null,
 
   openReaders: (reportId) => set({ currentReportId: reportId, isReadersOpen: true }),
   closeReaders: () => set({ isReadersOpen: false }),
-  
+
   openComments: (reportId) => set({ currentReportId: reportId, isCommentsOpen: true }),
   closeComments: () => set({ isCommentsOpen: false }),
 

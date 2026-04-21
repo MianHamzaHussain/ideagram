@@ -1,19 +1,19 @@
-import { 
-  ReadersModal, 
-  CommentsModal, 
-  FiltersModal, 
-  CommentFormModal, 
-  CameraCaptureModal, 
-  ConfirmModal 
+import {
+  ReadersModal,
+  CommentsModal,
+  FiltersModal,
+  CommentFormModal,
+  CameraCaptureModal,
+  ConfirmModal
 } from '@/components';
 import { useModalStore } from '@/store/useModalStore';
 
 const GlobalModals = () => {
-  const { 
-    isReadersOpen, 
-    isCommentsOpen, 
-    currentReportId, 
-    closeReaders, 
+  const {
+    isReadersOpen,
+    isCommentsOpen,
+    currentReportId,
+    closeReaders,
     closeComments,
     isFiltersOpen,
     filtersProps,
@@ -31,23 +31,23 @@ const GlobalModals = () => {
 
   return (
     <>
-      <ReadersModal 
-        isOpen={isReadersOpen && !!currentReportId} 
-        onClose={closeReaders} 
-        reportId={currentReportId || 0} 
+      <ReadersModal
+        isOpen={isReadersOpen && !!currentReportId}
+        onClose={closeReaders}
+        reportId={currentReportId || 0}
       />
-      <CommentsModal 
-        isOpen={isCommentsOpen && !!currentReportId} 
-        onClose={closeComments} 
-        reportId={currentReportId || 0} 
+      <CommentsModal
+        isOpen={isCommentsOpen && !!currentReportId}
+        onClose={closeComments}
+        reportId={currentReportId || 0}
       />
-      
+
       {isFiltersOpen && filtersProps && (
         <FiltersModal
           isOpen={isFiltersOpen}
           onClose={closeFilters}
           initialFilters={filtersProps.initialFilters}
-          onApply={filtersProps.onApply as any}
+          onApply={filtersProps.onApply}
         />
       )}
 

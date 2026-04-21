@@ -66,7 +66,10 @@ const ReportCard = ({
       </div>}
 
       {/* Image Carousel Section */}
-      <div className="mb-4">
+      <div 
+        className="mb-4"
+        onPointerDown={(e) => e.stopPropagation()}
+      >
         <ImageCarousel images={images} onIndexChange={setActiveIndex} />
       </div>
 

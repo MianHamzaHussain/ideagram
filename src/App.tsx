@@ -23,6 +23,7 @@ const ReportDetailPage = lazy(() => import('@/pages/ReportDetailPage/ReportDetai
 const CreatePostPage = lazy(() => import('@/pages/CreatePostPage/CreatePostPage'));
 const SearchPage = lazy(() => import('@/pages/SearchPage/SearchPage'));
 const NotificationsPage = lazy(() => import('@/pages/NotificationsPage/NotificationsPage'));
+const DraftsPage = lazy(() => import('@/pages/DraftsPage/DraftsPage'));
 
 const router = createBrowserRouter([
   {
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
           {
             path: '/notifications',
             element: <NotificationsPage />,
+          },
+          {
+            path: '/drafts',
+            element: <DraftsPage />,
           },
         ],
       },

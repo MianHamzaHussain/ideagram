@@ -1,12 +1,15 @@
-import { useState } from 'react';
-import { Formik, Form, type FormikHelpers } from 'formik';
+import { useState, useEffect, useMemo } from 'react';
+import { Formik, Form, useFormikContext, type FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import { PageHeader, StepIndicator, AnimatedPage, PageMeta } from '@/components';
 import { useNavigate } from 'react-router-dom';
-import { reportApi } from '@/api';
+import { reportApi, ReportType, type ReportMetadata } from '@/api';
 import { toast } from 'react-toastify';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getErrorMessage, dataUrlToFile } from '@/utils';
+import { useDraftStore } from '@/store/useDraftStore';
+import { usePublishReport } from '@/hooks';
+import type { CreatePostFormValues, MediaItem } from './types';
 
 // Steps
 import StepType from './steps/StepType';
@@ -16,21 +19,12 @@ import StepMedia from './steps/StepMedia';
 import StepNotifications from './steps/StepNotifications';
 import StepReview from './steps/StepReview';
 
-export interface MediaItem {
-  id: string;
-  dataUrl: string;
-  type: 'image' | 'video';
-  caption: string;
-  uploaded?: boolean;
-  file?: File;
-}
-
 // Validation Schema updated for dynamic fields
 const CreatePostSchema = Yup.object().shape({
   reportType: Yup.number().min(1, 'Required').required('Required'),
   project: Yup.string().required('Required'),
   tags: Yup.array().when('reportType', {
-    is: 2,
+    is: ReportType.PROGRESS,
     then: (schema) => schema.min(2, 'Select at least Status and Trend').required('Required'),
     otherwise: (schema) => schema.min(2, 'Select at least two tags').required('Required'),
   }),
@@ -47,20 +41,6 @@ const CreatePostSchema = Yup.object().shape({
 
 
 
-interface InitialValues {
-  reportType: number;
-  draft: boolean;
-  daysToStop: number;
-  project: string;
-  tags: number[];
-  title: string;
-  description: string;
-  date: string;
-  time: string;
-  media: MediaItem[];
-  mentions: number[];
-}
-
 const stepVariants = {
   initial: (direction: number) => ({
     x: direction > 0 ? '10%' : '-10%',
@@ -76,8 +56,23 @@ const stepVariants = {
   })
 };
 
+const AutoSave = ({ step }: { step: number }) => {
+  const { values, isSubmitting } = useFormikContext<CreatePostFormValues>();
+  const setDraft = useDraftStore((state) => state.setDraft);
+
+  useEffect(() => {
+    if (!isSubmitting) {
+      setDraft(values, step);
+    }
+  }, [values, step, isSubmitting, setDraft]);
+
+  return null;
+};
+
 const CreatePostPage = () => {
-  const [step, setStep] = useState(0);
+  const { currentFormValues, currentStep, clearDraft } = useDraftStore();
+  const { mutateAsync: publishReport } = usePublishReport();
+  const [step, setStep] = useState(currentStep || 0);
   const [direction, setDirection] = useState(0);
   const totalSteps = 6;
   const navigate = useNavigate();
@@ -85,19 +80,24 @@ const CreatePostPage = () => {
   const [createdReportId, setCreatedReportId] = useState<number | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
 
-  const initialValues: InitialValues = {
-    reportType: 0,
-    draft: false,
-    daysToStop: 0,
-    project: '',
-    tags: [],
-    title: '',
-    description: '',
-    date: '',
-    time: '',
-    media: [],
-    mentions: [],
-  };
+  const initialValues: CreatePostFormValues = useMemo(() => {
+    if (currentFormValues) {
+      return { ...currentFormValues, draft: false }; // ensure draft is false by default on resume
+    }
+    return {
+      reportType: 0,
+      draft: false,
+      daysToStop: 0,
+      project: '',
+      tags: [],
+      title: '',
+      description: '',
+      date: '',
+      time: '',
+      media: [],
+      mentions: [],
+    };
+  }, [currentFormValues]);
 
   const handleBack = () => {
     if (step > 0) {
@@ -113,7 +113,7 @@ const CreatePostPage = () => {
     setStep(nextStep);
   };
 
-  const handleSubmit = async (values: InitialValues, { setSubmitting, setFieldValue }: FormikHelpers<InitialValues>) => {
+  const handleSubmit = async (values: CreatePostFormValues, { setSubmitting, setFieldValue }: FormikHelpers<CreatePostFormValues>) => {
     setFormError(null);
     let reportId = createdReportId;
 
@@ -125,15 +125,15 @@ const CreatePostPage = () => {
           ? `${values.title.trim()}\n\n${values.description}`
           : values.description;
 
-        const metadata = {
+        const metadata: ReportMetadata = {
           explanation: fullExplanation,
-          reportType: values.reportType,
+          reportType: values.reportType as ReportType,
           notifiedUsers: values.mentions,
           project: parseInt(values.project),
           reportDate,
           tags: values.tags,
           draft: values.draft,
-          ...(values.reportType === 1 && values.daysToStop > 0 ? { daysToStop: values.daysToStop } : {}),
+          ...(values.reportType === ReportType.PROBLEM && values.daysToStop > 0 ? { daysToStop: values.daysToStop } : {}),
         };
 
         const response = await reportApi.create(metadata);
@@ -207,7 +207,7 @@ const CreatePostPage = () => {
 
       // 3. Explicit Publish Phase (Important: Backend creates all reports as drafts)
       if (!values.draft) {
-        await reportApi.publish(reportId!);
+        await publishReport(reportId!);
       }
 
 
@@ -217,6 +217,7 @@ const CreatePostPage = () => {
       } else {
         toast.success('Report published successfully!');
       }
+      clearDraft();
       navigate('/');
     } catch (error: unknown) {
       console.error('Submission Error:', error);
@@ -247,72 +248,75 @@ const CreatePostPage = () => {
           validationSchema={CreatePostSchema}
           onSubmit={handleSubmit}
         >
-          {({ submitForm, isSubmitting }) => (
-            <>
-              {isSubmitting && (
-                <div className="absolute inset-0 bg-white/80 z-[100] flex items-center justify-center flex-col gap-4">
-                  <div className="w-12 h-12 border-4 border-brand-blue border-t-transparent rounded-full animate-spin" />
-                  <p className="font-bold text-brand-blue">
-                    {createdReportId ? 'Uploading Media...' : 'Creating Report...'}
-                  </p>
-                </div>
-              )}
-              <Form className="flex-1 flex flex-col min-h-0 overflow-hidden relative">
-                <AnimatePresence mode="wait" custom={direction}>
-                  <motion.div
-                    key={step}
-                    custom={direction}
-                    variants={stepVariants}
-                    initial="initial"
-                    animate="animate"
-                    exit="exit"
-                    transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                    className="flex-1 flex flex-col w-full h-full overflow-hidden"
-                  >
-                    {step === 0 && (
-                      <StepType
-                        onSelect={() => {
-                          handleNext(1);
-                        }}
-                      />
-                    )}
+          {({ submitForm, isSubmitting }) => {
+            return (
+              <>
+                <AutoSave step={step} />
+                {isSubmitting && (
+                  <div className="absolute inset-0 bg-white/80 z-[100] flex items-center justify-center flex-col gap-4">
+                    <div className="w-12 h-12 border-4 border-brand-blue border-t-transparent rounded-full animate-spin" />
+                    <p className="font-bold text-brand-blue">
+                      {createdReportId ? 'Uploading Media...' : 'Creating Report...'}
+                    </p>
+                  </div>
+                )}
+                <Form className="flex-1 flex flex-col min-h-0 overflow-hidden relative">
+                  <AnimatePresence mode="wait" custom={direction}>
+                    <motion.div
+                      key={step}
+                      custom={direction}
+                      variants={stepVariants}
+                      initial="initial"
+                      animate="animate"
+                      exit="exit"
+                      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                      className="flex-1 flex flex-col w-full h-full overflow-hidden"
+                    >
+                      {step === 0 && (
+                        <StepType
+                          onSelect={() => {
+                            handleNext(1);
+                          }}
+                        />
+                      )}
 
-                    {step === 1 && (
-                      <StepDetails
-                        onNext={() => handleNext(2)}
-                      />
-                    )}
+                      {step === 1 && (
+                        <StepDetails
+                          onNext={() => handleNext(2)}
+                        />
+                      )}
 
-                    {step === 2 && (
-                      <StepPostDetails
-                        onNext={() => handleNext(3)}
-                      />
-                    )}
+                      {step === 2 && (
+                        <StepPostDetails
+                          onNext={() => handleNext(3)}
+                        />
+                      )}
 
-                    {step === 3 && (
-                      <StepMedia
-                        onNext={() => handleNext(4)}
-                      />
-                    )}
+                      {step === 3 && (
+                        <StepMedia
+                          onNext={() => handleNext(4)}
+                        />
+                      )}
 
-                    {step === 4 && (
-                      <StepNotifications
-                        onNext={() => handleNext(5)}
-                      />
-                    )}
+                      {step === 4 && (
+                        <StepNotifications
+                          onNext={() => handleNext(5)}
+                        />
+                      )}
 
-                    {step === 5 && (
-                      <StepReview
-                        error={formError}
-                        hasReportId={!!createdReportId}
-                        onNext={submitForm}
-                      />
-                    )}
-                  </motion.div>
-                </AnimatePresence>
-              </Form>
-            </>
-          )}
+                      {step === 5 && (
+                        <StepReview
+                          error={formError}
+                          hasReportId={!!createdReportId}
+                          onNext={submitForm}
+                        />
+                      )}
+                    </motion.div>
+                  </AnimatePresence>
+                </Form>
+              </>
+            );
+          }}
         </Formik>
       </div>
     </AnimatedPage>

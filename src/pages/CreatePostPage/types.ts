@@ -1,7 +1,16 @@
-import type { MediaItem } from './CreatePostPage';
+import type { ReportType } from '@/api/report';
+
+export interface MediaItem {
+  id: string;
+  dataUrl: string;
+  type: 'image' | 'video';
+  caption: string;
+  uploaded?: boolean;
+  file?: File;
+}
 
 export interface CreatePostFormValues {
-  reportType: number;
+  reportType: ReportType | 0;
   draft: boolean;
   daysToStop: number;
   project: string;

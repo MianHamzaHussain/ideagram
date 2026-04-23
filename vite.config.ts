@@ -37,30 +37,35 @@ export default defineConfig(({ mode }) => {
       tailwindcss(),
       VitePWA({
         registerType: 'autoUpdate',
-        includeAssets: ['favicon.ico'],
+        includeAssets: [
+          'favicon.ico', 
+          'apple-touch-icon.png', 
+          'favicon-32x32.png', 
+          'favicon-16x16.png'
+        ],
         manifest: {
           name: 'Ideagram',
           short_name: 'Ideagram',
           description: 'Industry standard mobile-first PWA',
           theme_color: '#0265DC',
-          background_color: '#F2F4F7',
+          background_color: '#FFFFFF',
           display: 'standalone',
           icons: [
             {
-              src: 'pwa-192x192.png',
+              src: 'android-chrome-192x192.png',
               sizes: '192x192',
               type: 'image/png'
             },
             {
-              src: 'pwa-512x512.png',
+              src: 'android-chrome-512x512.png',
               sizes: '512x512',
               type: 'image/png'
             },
             {
-              src: 'pwa-512x512.png',
+              src: 'android-chrome-512x512.png',
               sizes: '512x512',
               type: 'image/png',
-              purpose: 'any maskable'
+              purpose: 'maskable'
             }
           ]
         }

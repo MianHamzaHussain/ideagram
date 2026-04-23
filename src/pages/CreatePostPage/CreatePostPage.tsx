@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo } from 'react';
-import { Formik, Form, useFormikContext, type FormikHelpers } from 'formik';
+import { useState } from 'react';
+import { Formik, Form, type FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import { PageHeader, StepIndicator, AnimatedPage, PageMeta } from '@/components';
 import { useNavigate } from 'react-router-dom';
@@ -7,7 +7,6 @@ import { reportApi, ReportType, type ReportMetadata } from '@/api';
 import { toast } from 'react-toastify';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getErrorMessage, dataUrlToFile } from '@/utils';
-import { useDraftStore } from '@/store/useDraftStore';
 import { usePublishReport } from '@/hooks';
 import type { CreatePostFormValues, MediaItem } from './types';
 
@@ -56,23 +55,9 @@ const stepVariants = {
   })
 };
 
-const AutoSave = ({ step }: { step: number }) => {
-  const { values, isSubmitting } = useFormikContext<CreatePostFormValues>();
-  const setDraft = useDraftStore((state) => state.setDraft);
-
-  useEffect(() => {
-    if (!isSubmitting) {
-      setDraft(values, step);
-    }
-  }, [values, step, isSubmitting, setDraft]);
-
-  return null;
-};
-
 const CreatePostPage = () => {
-  const { currentFormValues, currentStep, clearDraft } = useDraftStore();
   const { mutateAsync: publishReport } = usePublishReport();
-  const [step, setStep] = useState(currentStep || 0);
+  const [step, setStep] = useState(0);
   const [direction, setDirection] = useState(0);
   const totalSteps = 6;
   const navigate = useNavigate();
@@ -80,24 +65,19 @@ const CreatePostPage = () => {
   const [createdReportId, setCreatedReportId] = useState<number | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
 
-  const initialValues: CreatePostFormValues = useMemo(() => {
-    if (currentFormValues) {
-      return { ...currentFormValues, draft: false }; // ensure draft is false by default on resume
-    }
-    return {
-      reportType: 0,
-      draft: false,
-      daysToStop: 0,
-      project: '',
-      tags: [],
-      title: '',
-      description: '',
-      date: '',
-      time: '',
-      media: [],
-      mentions: [],
-    };
-  }, [currentFormValues]);
+  const initialValues: CreatePostFormValues = {
+    reportType: 0,
+    draft: false,
+    daysToStop: 0,
+    project: '',
+    tags: [],
+    title: '',
+    description: '',
+    date: '',
+    time: '',
+    media: [],
+    mentions: [],
+  };
 
   const handleBack = () => {
     if (step > 0) {
@@ -132,7 +112,7 @@ const CreatePostPage = () => {
           project: parseInt(values.project),
           reportDate,
           tags: values.tags,
-          draft: values.draft,
+          draft: true, // Always create as draft initially
           ...(values.reportType === ReportType.PROBLEM && values.daysToStop > 0 ? { daysToStop: values.daysToStop } : {}),
         };
 
@@ -217,7 +197,6 @@ const CreatePostPage = () => {
       } else {
         toast.success('Report published successfully!');
       }
-      clearDraft();
       navigate('/');
     } catch (error: unknown) {
       console.error('Submission Error:', error);
@@ -251,7 +230,6 @@ const CreatePostPage = () => {
           {({ submitForm, isSubmitting }) => {
             return (
               <>
-                <AutoSave step={step} />
                 {isSubmitting && (
                   <div className="absolute inset-0 bg-white/80 z-[100] flex items-center justify-center flex-col gap-4">
                     <div className="w-12 h-12 border-4 border-brand-blue border-t-transparent rounded-full animate-spin" />

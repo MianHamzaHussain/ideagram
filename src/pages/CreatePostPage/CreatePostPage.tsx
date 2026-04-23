@@ -194,8 +194,6 @@ const CreatePostPage = () => {
       // 4. Final Success
       if (values.draft) {
         toast.success('Draft saved successfully!');
-      } else {
-        toast.success('Report published successfully!');
       }
       navigate('/');
     } catch (error: unknown) {

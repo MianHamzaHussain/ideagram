@@ -81,9 +81,14 @@ const ProfilePage = () => {
 
   const logoutMutation = useMutation({
     mutationFn: authApi.logout,
-    onSuccess: () => { logout(); navigate('/login'); },
+    onSuccess: () => { 
+      queryClient.clear();
+      logout(); 
+      navigate('/login'); 
+    },
     onError: (error) => {
       toast.error(getErrorMessage(error, 'Logout failed'));
+      queryClient.clear();
       logout();
       navigate('/login');
     }
@@ -92,7 +97,11 @@ const ProfilePage = () => {
   const handleLogout = () => {
     const { refreshToken } = useAuthStore.getState();
     if (refreshToken) logoutMutation.mutate(refreshToken);
-    else { logout(); navigate('/login'); }
+    else { 
+      queryClient.clear();
+      logout(); 
+      navigate('/login'); 
+    }
   };
 
   const fileInputRef = useRef<HTMLInputElement>(null);

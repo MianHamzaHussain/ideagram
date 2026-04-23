@@ -1,6 +1,8 @@
 import { useFormikContext } from 'formik';
+import { useNavigate } from 'react-router-dom';
 import TypeCard from './TypeCard';
 import { ProgressIcon, ProblemIcon } from './Icons';
+import { ReportType } from '@/api/report';
 
 interface StepTypeProps {
   onSelect: (type: 'progress' | 'problem' | 'drafts') => void;
@@ -8,11 +10,12 @@ interface StepTypeProps {
 
 const StepType = ({ onSelect }: StepTypeProps) => {
   const { values, setFieldValue } = useFormikContext<{
-    reportType: number;
+    reportType: ReportType;
     draft: boolean;
     tags: number[];
     daysToStop: number;
   }>();
+  const navigate = useNavigate();
 
   const handleSelect = (type: 'progress' | 'problem' | 'drafts') => {
     // Clear tags and daysToStop whenever type is changed to avoid mismatched data
@@ -20,13 +23,13 @@ const StepType = ({ onSelect }: StepTypeProps) => {
     setFieldValue('daysToStop', 0);
 
     if (type === 'progress') {
-      setFieldValue('reportType', 2);
+      setFieldValue('reportType', ReportType.PROGRESS);
       setFieldValue('draft', false);
     } else if (type === 'problem') {
-      setFieldValue('reportType', 1);
+      setFieldValue('reportType', ReportType.PROBLEM);
       setFieldValue('draft', false);
     } else if (type === 'drafts') {
-      setFieldValue('reportType', 1); // Default to problem for draft as requested
+      setFieldValue('reportType', ReportType.PROBLEM); // Default to problem for draft as requested
       setFieldValue('draft', true);
     }
 
@@ -50,7 +53,7 @@ const StepType = ({ onSelect }: StepTypeProps) => {
               label="Progress"
               icon={<ProgressIcon />}
               onClick={() => handleSelect('progress')}
-              isActive={values.reportType === 2 && !values.draft}
+              isActive={values.reportType === ReportType.PROGRESS && !values.draft}
               activeColor="border-primary-400"
             />
           </div>
@@ -61,31 +64,24 @@ const StepType = ({ onSelect }: StepTypeProps) => {
               label="Problem"
               icon={<ProblemIcon />}
               onClick={() => handleSelect('problem')}
-              isActive={values.reportType === 1 && !values.draft}
+              isActive={values.reportType === ReportType.PROBLEM && !values.draft}
               activeColor="border-primary-400"
             />
           </div>
         </div>
 
         {/* Drafts Button */}
-        {/* <div className="w-full px-2">
+        <div className="w-full px-2">
           <button
             type="button"
-            onClick={() => handleSelect('drafts')}
-            className={`
-              w-full h-[57px] rounded-[16px] px-[40px] py-[16px] 
-              flex items-center justify-center gap-2 
-              transition-all active:scale-95
-              ${values.draft 
-                ? 'border-2 border-dashed border-primary-400 bg-primary-50/50' 
-                : 'border-2 border-dashed border-[#D5D5D5] hover:bg-neutral-50'}
-            `}
+            onClick={() => navigate('/drafts')}
+            className="w-full h-[57px] rounded-[16px] px-[40px] py-[16px] border-2 border-dashed border-[#D5D5D5] hover:bg-neutral-50 flex items-center justify-center gap-2 transition-all active:scale-95"
           >
             <span className="font-['Inter',sans-serif] font-bold text-[18px] leading-[1.4] text-[#1F2122]">
               Drafts
             </span>
           </button>
-        </div> */}
+        </div>
       </div>
     </div>
   );

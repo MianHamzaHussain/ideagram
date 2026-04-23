@@ -2,6 +2,7 @@ import { motion, type HTMLMotionProps } from 'framer-motion';
 
 interface ButtonProps extends HTMLMotionProps<"button"> {
   variant?: 'primary' | 'secondary' | 'outline' | 'navy' | 'brand-outline' | 'destructive';
+  size?: 'sm' | 'md' | 'lg';
   rounded?: 'xl' | 'full';
   isLoading?: boolean;
 }
@@ -9,12 +10,20 @@ interface ButtonProps extends HTMLMotionProps<"button"> {
 const Button = ({
   children,
   variant = 'primary',
+  size = 'md',
   rounded = 'xl',
   isLoading = false,
   className = '',
   ...props
 }: ButtonProps) => {
-  const baseStyles = `w-full px-6 py-[14px] cursor-pointer transition-colors duration-200 ripple flex items-center justify-center gap-2 font-inter text-base font-bold select-none h-[48px] focus:outline-none 
+  const sizeStyles = {
+    sm: 'px-4 py-2 h-[36px] text-sm',
+    md: 'px-6 py-[14px] h-[48px] text-base',
+    lg: 'px-8 py-4 h-[56px] text-lg',
+  };
+
+  const baseStyles = `w-full cursor-pointer transition-colors duration-200 ripple flex items-center justify-center gap-2 font-inter font-bold select-none focus:outline-none 
+    ${sizeStyles[size]}
     ${rounded === 'full' ? 'rounded-button' : 'rounded-xl'}`;
 
   const variantStyles = {

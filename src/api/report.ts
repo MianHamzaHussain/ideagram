@@ -1,8 +1,15 @@
 import { apiClient } from './client';
 
+export const ReportType = {
+  PROBLEM: 1,
+  PROGRESS: 2,
+} as const;
+
+export type ReportType = (typeof ReportType)[keyof typeof ReportType];
+
 export interface ReportMetadata {
   explanation: string;
-  reportType: number;
+  reportType: ReportType;
   notifiedUsers: number[];
   project: number;
   reportDate: string; // ISO string
@@ -77,6 +84,14 @@ export const reportApi = {
     return apiClient.put(`publish/report/${reportId}/`, {});
   },
 
+  patch: async (reportId: number, data: Partial<ReportMetadata>): Promise<Report> => {
+    return apiClient.patch<Report>(`report/${reportId}/`, data);
+  },
+
+  delete: async (reportId: number): Promise<void> => {
+    return apiClient.delete(`report/${reportId}/`);
+  },
+
   list: async (params: {
     pag_type: string;
     before_id?: number;
@@ -85,30 +100,29 @@ export const reportApi = {
     keyword?: string;
     project_id?: number;
     tags?: Record<number, number[]>; // Map of tagTypeId -> tagIds[]
+    draft?: boolean;
   }): Promise<InfiniteReportResponse> => {
-    const queryParams = new URLSearchParams({
+    const queryParams = new URLSearchParams();
+
+    // Map basic params
+    const paramMap: Record<string, string | number | boolean | undefined> = {
       pag_type: params.pag_type,
+      before_id: params.before_id,
+      report_type: params.report_type,
+      page_size: params.page_size,
+      keyword: params.keyword,
+      project_id: params.project_id,
+      draft: params.draft,
+    };
+
+    Object.entries(paramMap).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        queryParams.append(key, value.toString());
+      }
     });
 
-    if (params.before_id) {
-      queryParams.append('before_id', params.before_id.toString());
-    }
-
-    if (params.report_type) {
-      queryParams.append('report_type', params.report_type);
-    }
-
-    if (params.page_size) {
-      queryParams.append('page_size', params.page_size.toString());
-    }
-
     if (params.keyword) {
-      queryParams.append('keyword', params.keyword);
       queryParams.append('search_type', 'mobile');
-    }
-
-    if (params.project_id) {
-      queryParams.append('project_id', params.project_id.toString());
     }
 
     if (params.tags && Object.keys(params.tags).length > 0) {
@@ -119,6 +133,17 @@ export const reportApi = {
     }
 
     return apiClient.get<InfiniteReportResponse>(`report/?${queryParams.toString()}`);
+  },
+
+  listDrafts: async (params: {
+    before_id?: number;
+    page_size?: number;
+  }): Promise<InfiniteReportResponse> => {
+    return reportApi.list({
+      pag_type: 'mobile',
+      draft: true,
+      ...params,
+    });
   },
 
 

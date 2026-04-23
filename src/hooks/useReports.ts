@@ -1,17 +1,19 @@
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { reportApi, type InfiniteReportResponse } from '@/api/report';
 import { PAGE_SIZE } from '@/config/queryConfig';
+import { toast } from 'react-toastify';
 
 export interface UseReportsParams {
   reportType?: 'progress' | 'trouble';
   keyword?: string;
   projectId?: number;
   tags?: Record<number, number[]>;
+  draft?: boolean;
 }
 
 export const useInfiniteReports = (params: UseReportsParams = {}) => {
   return useInfiniteQuery<InfiniteReportResponse>({
-    queryKey: ['reports', params.reportType, params.keyword, params.projectId, params.tags],
+    queryKey: ['reports', params.reportType, params.keyword, params.projectId, params.tags, params.draft],
     queryFn: ({ pageParam }) =>
       reportApi.list({
         pag_type: 'mobile',
@@ -21,6 +23,7 @@ export const useInfiniteReports = (params: UseReportsParams = {}) => {
         keyword: params.keyword,
         project_id: params.projectId,
         tags: params.tags,
+        draft: params.draft,
       }),
     initialPageParam: undefined,
     getNextPageParam: (lastPage) => {
@@ -28,6 +31,38 @@ export const useInfiniteReports = (params: UseReportsParams = {}) => {
       if (!lastPage || lastPage.length === 0) return undefined;
       const lastReport = lastPage[lastPage.length - 1];
       return lastReport.id;
+    },
+  });
+};
+
+export const usePublishReport = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (reportId: number) => reportApi.publish(reportId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['reports'] });
+      toast.success('Report published successfully!');
+    },
+    onError: (error) => {
+      toast.error('Failed to publish report.');
+      console.error(error);
+    },
+  });
+};
+
+export const useDeleteReport = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (reportId: number) => reportApi.delete(reportId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['reports'] });
+      toast.success('Draft deleted successfully!');
+    },
+    onError: (error) => {
+      toast.error('Failed to delete draft.');
+      console.error(error);
     },
   });
 };

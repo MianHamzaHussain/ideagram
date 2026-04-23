@@ -137,7 +137,7 @@ const ProfilePage = () => {
     return (
       <AnimatedPage animationType="push">
         <div className="flex flex-col bg-white h-full animate-pulse">
-          <PageHeader title="Profile" onBack={() => navigate(-1)} centered={true} />
+          <PageHeader title="Profile" onBack={() => navigate(-1)} centered={true} showBorder={false} />
           <div className="flex-1 px-4 py-8 flex flex-col items-center gap-8">
             <div className="w-32 h-32 bg-neutral-100 rounded-full" />
             <div className="w-full space-y-4">
@@ -182,6 +182,7 @@ const ProfilePage = () => {
                 title="Profile"
                 onBack={() => handleBack(dirty)}
                 centered
+                showBorder={false}
                 rightElement={
                   <button
                     onClick={() => submitForm()}
@@ -217,6 +218,7 @@ const ProfilePage = () => {
                   <TextField label="Bio" name="bio" />
                   <TextField label="Phone Number" name="phone" />
                   <div className="flex flex-col gap-3 mt-8">
+                    <Button type="button" variant="brand-outline" onClick={() => navigate('/drafts')}>My Drafts</Button>
                     <Button type="button" variant="brand-outline" onClick={() => setIsChangePasswordOpen(true)}>Change Password</Button>
                     <Button type="button" variant="brand-outline" onClick={handleLogout} isLoading={logoutMutation.isPending}>Logout</Button>
                   </div>
